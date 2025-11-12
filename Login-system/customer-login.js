@@ -106,7 +106,7 @@ if(loginForm){
     show(`Welcome back, ${current.name}!`);
     
     setTimeout(() => {
-      location.href = '../Front-End/customer-dashboard.html';
+      location.href = 'd./Front-End/customer-dashboard.html';
     }, 700);
   });
 }

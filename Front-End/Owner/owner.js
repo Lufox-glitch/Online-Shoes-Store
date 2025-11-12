@@ -26,7 +26,7 @@ const cancel = $("cancel");
 const imagePreview = $("imagePreview");
 
 let editingId = null;
-let currentImageData = null; // stores base64 or URL
+let currentImageData = null;
 
 function readControls(){ try { return JSON.parse(localStorage.getItem('owner_controls')||'{}'); } catch { return {}; } }
 function saveControls(obj){
@@ -35,7 +35,11 @@ function saveControls(obj){
   flashStatus('Controls updated');
 }
 function readProducts(){ try { return JSON.parse(localStorage.getItem('products')||'[]'); } catch { return []; } }
-function saveProducts(arr){ localStorage.setItem('products', JSON.stringify(arr)); flashStatus('Products updated'); }
+function saveProducts(arr){ 
+  localStorage.setItem('products', JSON.stringify(arr)); 
+  flashStatus('Products updated');
+  renderProducts();
+}
 
 function flashStatus(t){
   status.textContent = t;
@@ -61,7 +65,7 @@ p_image.addEventListener('change', (e)=>{
   if(!file) return;
   const reader = new FileReader();
   reader.onload = (evt)=> {
-    currentImageData = evt.target.result; // base64 data URL
+    currentImageData = evt.target.result;
     updateImagePreview(currentImageData);
   };
   reader.readAsDataURL(file);
@@ -89,40 +93,51 @@ function renderProducts(){
       <div class="thumb">${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Crect fill=%22%23081826%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">` : '<div style="padding:8px;color:#9aa7bf">No image</div>'}</div>
       <div class="title">${escapeHtml(p.name)}</div>
       <div class="meta"><div class="price">रू ${p.price}</div><div class="actions">
-        <button class="btn" data-action="edit">Edit</button>
-        <button class="btn danger" data-action="remove">Remove</button>
+        <button class="btn edit-btn" data-action="edit" data-id="${p.id}">Edit</button>
+        <button class="btn danger remove-btn" data-action="remove" data-id="${p.id}">Remove</button>
       </div></div>
       <div class="desc">${escapeHtml(p.desc||'')}</div>
     </div>
   `).join('') || '<div class="small muted">No products. Add one.</div>';
+  
+  // rebind event listeners after rendering
+  attachProductListeners();
 }
+
 function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 
-productListEl.addEventListener('click', (e)=>{
-  const card = e.target.closest('.card');
-  if(!card) return;
-  const id = card.dataset.id;
-  const action = e.target.dataset.action;
-  if(action === 'remove'){
-    const ok = confirm('Remove product?');
-    if(!ok) return;
-    const next = readProducts().filter(p=>p.id!==id);
-    saveProducts(next);
-    renderProducts();
-  } else if(action === 'edit'){
-    const p = readProducts().find(x=>x.id===id);
-    if(!p) return;
-    editingId = p.id;
-    modalTitle.textContent = 'Edit product';
-    p_name.value = p.name;
-    p_price.value = p.price;
-    p_imageUrl.value = '';
-    p_desc.value = p.desc||'';
-    currentImageData = p.image;
-    updateImagePreview(p.image);
-    showModal();
-  }
-});
+function attachProductListeners(){
+  // Edit buttons
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e)=> {
+      e.preventDefault();
+      const id = btn.dataset.id;
+      const p = readProducts().find(x=>x.id===id);
+      if(!p) return;
+      editingId = p.id;
+      modalTitle.textContent = 'Edit product';
+      p_name.value = p.name;
+      p_price.value = p.price;
+      p_imageUrl.value = '';
+      p_desc.value = p.desc||'';
+      currentImageData = p.image;
+      updateImagePreview(p.image);
+      showModal();
+    });
+  });
+
+  // Remove buttons
+  document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e)=> {
+      e.preventDefault();
+      const id = btn.dataset.id;
+      const ok = confirm('Remove this product from customer dashboard?');
+      if(!ok) return;
+      const next = readProducts().filter(p=>p.id!==id);
+      saveProducts(next);
+    });
+  });
+}
 
 /* Modal */
 addProductBtn.addEventListener('click', ()=> {
@@ -156,7 +171,6 @@ saveProduct.addEventListener('click', ()=>{
     products.unshift({ id: Date.now().toString(36), name, price, image: currentImageData, desc });
   }
   saveProducts(products);
-  renderProducts();
   hideModal();
 });
 
@@ -168,7 +182,6 @@ importDemo.addEventListener('click', ()=>{
   ];
   const merged = demo.concat(readProducts());
   saveProducts(merged);
-  renderProducts();
 });
 
 /* init UI from storage */
@@ -178,7 +191,7 @@ importDemo.addEventListener('click', ()=>{
   renderProducts();
 })();
 
-/* listen to external changes (owner updating from other tab should still render here) */
+/* listen to external changes */
 window.addEventListener('storage', (e)=>{
   if(e.key === 'products' || e.key === 'owner_controls') renderProducts();
 });

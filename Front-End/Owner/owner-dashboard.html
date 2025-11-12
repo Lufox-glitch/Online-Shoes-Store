@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>P&S Owner Dashboard</title>
   <link rel="stylesheet" href="owner.css" />
+  <style>
+    .image-upload{display:flex;flex-direction:column;gap:8px}
+    .image-preview{width:100%;height:140px;border-radius:8px;background:#081826;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px dashed rgba(255,255,255,0.1)}
+    .image-preview img{max-width:100%;max-height:100%;object-fit:contain}
+    .upload-input{display:none}
+    .upload-label{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;cursor:pointer;text-align:center;font-weight:600;transition:all 0.2s}
+    .upload-label:hover{background:rgba(255,122,24,0.1);border-color:#ff7a18}
+  </style>
 </head>
 <body>
   <header class="topbar">
@@ -17,7 +25,7 @@
     </div>
     <div class="actions">
       <button id="openCustomer" class="btn">Open Customer View</button>
-      <a href="/Login-system/owner-login.html" class="link">Sign out</a>
+      <a href="../../Login-system/owner-login.html" class="link">Sign out</a>
     </div>
   </header>
 
@@ -62,10 +70,23 @@
   <div id="modal" class="modal hidden" aria-hidden="true">
     <div class="modal-panel">
       <h3 id="modalTitle">Add product</h3>
+      
       <label>Name <input id="p_name" /></label>
       <label>Price (रू) <input id="p_price" type="number" min="0" /></label>
-      <label>Image URL <input id="p_image" placeholder="https://..." /></label>
+      
+      <div class="image-upload">
+        <label>Product Image</label>
+        <div class="image-preview" id="imagePreview">
+          <div style="color:#9aa7bf;text-align:center">No image selected</div>
+        </div>
+        <label class="upload-label" for="p_image">Choose Image</label>
+        <input id="p_image" class="upload-input" type="file" accept="image/*" />
+        <small style="color:#9aa7bf">Or paste image URL below:</small>
+        <input id="p_imageUrl" placeholder="https://..." />
+      </div>
+      
       <label>Description <textarea id="p_desc"></textarea></label>
+      
       <div class="modal-actions">
         <button id="saveProduct" class="btn primary">Save</button>
         <button id="cancel" class="btn">Cancel</button>

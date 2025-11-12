@@ -1,4 +1,4 @@
-// Simple owner login (reminder feature removed)
+// Simple owner login
 
 const demo = { email: "prashantwaiba123@gmail.com", password: "prashant123" };
 
@@ -36,9 +36,9 @@ loginForm.addEventListener("submit", (e) => {
     if (remember.checked) localStorage.setItem("owner_remember", email);
     else localStorage.removeItem("owner_remember");
 
-    // redirect to owner dashboard (demo)
+    // redirect to owner dashboard
     setTimeout(() => {
-      window.location.href = "owner-dashboard.html";
+      window.location.href = "../Front-End/Owner/owner-dashboard.html";
     }, 700);
   } else {
     showMessage("Invalid credentials.", "error");

@@ -67,7 +67,7 @@ loginForm.addEventListener('submit', e => {
   // Redirect to customer dashboard (index.html).
   // If your dashboard is in a different folder, change the path below.
   setTimeout(() => {
-    location.href = 'Online Shoes Store/Front-End/customer-dashboard.html';
+    location.href = './Front-End/customer-dashboard.html';
   }, 700);
 });
 // ...existing code...

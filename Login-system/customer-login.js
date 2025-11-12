@@ -17,8 +17,25 @@ const show = (text, ok = true) => {
 
 // Demo credentials (reference only — demo creation removed)
 const DEMO_EMAIL = 'sandeshnapit123@gmail.com';
-const DEMO_PWD = 'sandesh123';
+const DEMO_PWD = 'samdesh123';
 
+// ensure demo user exists (silent, no UI)
+(function ensureDemoUser(){
+  try {
+    const users = getUsers();
+    if(!users.find(u => u.email === DEMO_EMAIL.toLowerCase())){
+      users.push({
+        id: Date.now(),
+        name: 'Demo User',
+        email: DEMO_EMAIL.toLowerCase(),
+        pwd: hash(DEMO_PWD),
+        role: 'customer',
+        created: new Date().toISOString()
+      });
+      setUsers(users);
+    }
+  } catch (err){ /* ignore */ }
+})();
 // Toggle password visibility
 togglePwd.addEventListener('click', () => {
   const isPwd = pwdInput.getAttribute('type') === 'password';
@@ -36,6 +53,33 @@ loginForm.addEventListener('submit', e => {
   const password = pwdInput.value;
   if (!validateEmail(email) || password.length < 3) { show('Enter valid credentials', false); return; }
 
+  // Accept demo credentials directly (create demo user if missing)
+  if (email === DEMO_EMAIL.toLowerCase() && password === DEMO_PWD) {
+    try {
+      const users = getUsers();
+      let demo = users.find(x => x.email === email);
+      if (!demo) {
+        demo = {
+          id: Date.now(),
+          name: 'Demo User',
+          email,
+          pwd: hash(DEMO_PWD),
+          role: 'customer',
+          created: new Date().toISOString()
+        };
+        users.push(demo);
+        setUsers(users);
+      }
+      const remember = qs('#remember').checked;
+      const current = { role: 'customer', email: demo.email, name: demo.name || 'Customer' };
+      if (remember) localStorage.setItem('currentUser', JSON.stringify(current));
+      else sessionStorage.setItem('currentUser', JSON.stringify(current));
+      show(`Welcome back, ${current.name}!`);
+      setTimeout(() => location.href = './Front-End/customer-dashboard.html', 700);
+      return;
+    } catch (err) { /* ignore and fall through to normal check */ }
+  }
+
   const users = getUsers();
   const u = users.find(x => x.email === email && x.pwd === hash(password));
   if (!u) { show('Invalid credentials', false); return; }
@@ -46,7 +90,6 @@ loginForm.addEventListener('submit', e => {
   if (remember) {
     localStorage.setItem('currentUser', JSON.stringify(current));
   } else {
-    // session-only storage
     sessionStorage.setItem('currentUser', JSON.stringify(current));
   }
 

@@ -14,7 +14,7 @@
   <a href="Login-system/owner-login.html" class="owner-login-btn">Owner Login</a>
 
   <main class="auth-wrap" role="main">
-    <div class="card" aria-hidden="false">
+    <div class="card">
       <aside class="promo" aria-hidden="true">
         <div class="promo-inner">
           <svg class="shoe" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -32,20 +32,20 @@
 
       <section class="form-panel" aria-label="Customer login panel">
         <header class="brand-row">
-          <h1 class="brand">P&amp;S Online Shoes</h1>
+          <h1 class="brand">P&S Online Shoes</h1>
         </header>
 
-        <form id="loginForm" class="form" aria-label="Customer login form" autocomplete="on">
+        <form id="loginForm" class="form" autocomplete="on">
           <div class="field">
             <label for="email" class="label-text">Email</label>
-            <input id="email" name="email" type="email" required autocomplete="username" placeholder="Enter your email" />
+            <input id="email" type="email" required placeholder="sandeshnapit123@gmail.com" />
           </div>
 
           <div class="field password-field">
             <label for="password" class="label-text">Password</label>
             <div class="pwd-wrap">
-              <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••" />
-              <button id="togglePwd" class="icon-btn" type="button" aria-label="Show password" title="Show password">
+              <input id="password" type="password" required placeholder="••••••••" />
+              <button id="togglePwd" class="icon-btn" type="button" aria-label="Show password">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
@@ -55,12 +55,12 @@
             <label class="remember">
               <input id="remember" type="checkbox" /> Remember me
             </label>
-            <a class="forgot" href="#" id="forgotLink">Forgot?</a>
+            <a class="forgot" href="#">Forgot?</a>
           </div>
 
           <button type="submit" class="btn primary">Sign in</button>
 
-          <p class="muted">No account? <a href="Login-system/customer-registration.html" class="link-btn">Create an account</a></p>
+          <p class="muted">No account? <a href="Login-system/customer-register.html" class="link-btn">Create an account</a></p>
 
           <div id="msg" class="message" role="status" aria-live="polite"></div>
         </form>

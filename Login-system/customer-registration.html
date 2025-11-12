@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create Account - P&S Shoes</title>
+  <link rel="stylesheet" href="customer-registration.css" />
+  <style>
+    .back-link{position:absolute;top:16px;right:16px;padding:8px 12px;border-radius:8px;background:#f3f4f6;color:#061022;text-decoration:none;font-weight:600}
+    .back-link:hover{background:#e5e7eb}
+  </style>
+</head>
+<body>
+  <a class="back-link" href="/index.html">Back to Login</a>
+
+  <main class="auth-wrap" role="main">
+    <div class="card">
+      <section class="form-panel" aria-label="Customer registration panel">
+        <header class="brand-row">
+          <h1 class="brand">Create Account</h1>
+        </header>
+
+        <form id="registerForm" class="form" autocomplete="on" aria-label="Customer registration form">
+          <div class="field">
+            <label for="name" class="label-text">Full name</label>
+            <input id="name" name="name" type="text" required placeholder="Your full name" />
+          </div>
+
+          <div class="field">
+            <label for="email" class="label-text">Email</label>
+            <input id="email" name="email" type="email" required placeholder="Enter your email" />
+          </div>
+
+          <div class="field">
+            <label for="phone" class="label-text">Phone (optional)</label>
+            <input id="phone" name="phone" type="tel" placeholder="98xxxxxxxx" />
+          </div>
+
+          <div class="field password-field">
+            <label for="password" class="label-text">Password</label>
+            <input id="password" name="password" type="password" required placeholder="Create a password" />
+          </div>
+
+          <div class="field password-field">
+            <label for="confirmPassword" class="label-text">Confirm password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Repeat password" />
+          </div>
+
+          <button type="submit" class="btn primary">Create account</button>
+
+          <div id="regMsg" class="message" role="status" aria-live="polite"></div>
+
+          <p class="muted">Already have an account? <a href="../index.html" class="link-btn">Sign in</a></p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="customer-registration.js"></script>
+</body>
+</html>

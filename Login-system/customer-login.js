@@ -1,11 +1,8 @@
 /* filepath: /Users/prashnawaibatamang/Online Shoes Store/Online-Shoes-Store-1/Online Shoes Store/Login-system/customer-login.js */
 /* ...existing code... */
-// Demo client-side auth (localStorage) — not for production
-
 const qs = s => document.querySelector(s);
 const loginForm = qs('#loginForm');
 const msg = qs('#msg');
-const demoBtn = qs('#createDemo');
 const togglePwd = qs('#togglePwd');
 const pwdInput = qs('#password');
 
@@ -18,24 +15,15 @@ const show = (text, ok = true) => {
   msg.className = 'message ' + (ok ? 'success' : 'error');
 };
 
+// Demo credentials (reference only — demo creation removed)
+const DEMO_EMAIL = 'demo@psstore.com';
+const DEMO_PWD = 'Demo#2025';
+
 // Toggle password visibility
 togglePwd.addEventListener('click', () => {
   const isPwd = pwdInput.getAttribute('type') === 'password';
   pwdInput.setAttribute('type', isPwd ? 'text' : 'password');
   togglePwd.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
-});
-
-// Create demo account quickly
-demoBtn.addEventListener('click', () => {
-  const users = getUsers();
-  const demoEmail = 'customer@test.com';
-  if (!users.find(u => u.email === demoEmail)) {
-    users.push({ name: 'Demo Customer', email: demoEmail, pwd: hash('test123') });
-    setUsers(users);
-    show('Demo created: customer@test.com / test123');
-    return;
-  }
-  show('Demo account already exists', true);
 });
 
 // Validate simple email
@@ -64,10 +52,8 @@ loginForm.addEventListener('submit', e => {
 
   show(`Welcome back, ${current.name}!`);
 
-  // Redirect to customer dashboard (index.html).
-  // If your dashboard is in a different folder, change the path below.
+  // Redirect to customer dashboard
   setTimeout(() => {
     location.href = './Front-End/customer-dashboard.html';
   }, 700);
 });
-// ...existing code...

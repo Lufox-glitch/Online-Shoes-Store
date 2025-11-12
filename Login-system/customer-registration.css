@@ -1,0 +1,303 @@
+/* Clean, responsive UI for customer login / registration pages */
+
+:root{
+  --bg-1: #f6f8fb;
+  --accent: #ff7a18;
+  --accent-600: #ff6600;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  --shadow: 0 8px 30px rgba(6, 16, 28, 0.08);
+  --radius: 12px;
+  --max-width: 980px;
+  --gap: 20px;
+  --transition: 180ms ease;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Page layout */
+html,body{
+  height:100%;
+  margin:0;
+  background: linear-gradient(180deg,#f3f6fb 0%, #ffffff 100%);
+  color:#061022;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.auth-wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+/* Card */
+.card{
+  width:100%;
+  max-width:var(--max-width);
+  background:transparent;
+  border-radius:var(--radius);
+  display:grid;
+  grid-template-columns: 420px 1fr;
+  gap:var(--gap);
+  align-items:stretch;
+  box-shadow: none;
+}
+
+/* promo / left side */
+.promo{
+  background: linear-gradient(180deg, rgba(110,193,255,0.12), rgba(74,124,255,0.06));
+  border-radius: var(--radius);
+  padding:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: var(--shadow);
+  min-height: 420px;
+}
+.promo-inner{
+  text-align:center;
+  color:#033049;
+}
+.promo .shoe{width:120px;height:auto;margin:0 auto 12px;display:block;filter:drop-shadow(0 8px 24px rgba(6,16,28,0.06))}
+.promo h3{margin:8px 0 6px;font-size:20px;font-weight:700}
+.promo p{margin:0;color:var(--muted);font-size:14px;line-height:1.35}
+
+/* form panel */
+.form-panel{
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow: var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:420px;
+}
+.brand-row{margin-bottom:12px}
+.brand{font-size:20px;margin:0;color:#061022;letter-spacing:0.2px}
+
+/* Form elements */
+.form{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:8px}
+.label-text{font-size:13px;color:#07112a;font-weight:600}
+input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea{
+  font:inherit;
+  padding:10px 12px;
+  border:1px solid #e6e9ef;
+  border-radius:10px;
+  background: #fff;
+  transition: border var(--transition), box-shadow var(--transition);
+  color:#061022;
+  box-sizing:border-box;
+}
+input::placeholder{color:#9aa4b2}
+input:focus, textarea:focus{
+  outline:none;
+  border-color: rgba(255,122,24,0.95);
+  box-shadow: 0 4px 18px rgba(255,122,24,0.08);
+}
+
+/* password field layout */
+.password-field .pwd-wrap{display:flex;align-items:center;gap:8px}
+.pwd-wrap input{flex:1}
+.icon-btn{
+  background:transparent;border:1px solid transparent;padding:8px;border-radius:8px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--muted);
+}
+.icon-btn:hover{background:#f7f9fb;border-color:#eef2f6;color:#061022}
+
+/* row */
+.row.between{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.remember{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.remember input{width:16px;height:16px}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:15px;
+  transition:transform 140ms ease, box-shadow var(--transition);
+}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(255,122,24,0.12)}
+.btn.primary:hover{background:var(--accent-600)}
+.link-btn{color:var(--accent);text-decoration:none;font-weight:700}
+
+/* messages */
+.message{margin-top:6px;font-size:13px;min-height:20px;color:var(--muted)}
+.message.success{color:var(--success);font-weight:600}
+.message.error{color:var(--error);font-weight:600}
+
+/* muted text / small */
+.muted{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* responsive */
+@media (max-width:920px){
+  .card{grid-template-columns:1fr; padding:0; gap:16px}
+  .promo{order:2;padding:18px}
+  .form-panel{order:1;padding:22px}
+  .promo .shoe{width:96px}
+}
+
+/* mobile tweaks */
+@media (max-width:520px){
+  .form-panel{padding:18px}
+  input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea{padding:12px}
+  .btn{padding:12px}
+  .brand{font-size:18px}
+  .promo p{font-size:13px}
+}
+```// filepath: /Users/prashnawaibatamang/Online Shoes Store/Online-Shoes-Store-3/Login-system/customer-login.css
+/* Clean, responsive UI for customer login / registration pages */
+
+:root{
+  --bg-1: #f6f8fb;
+  --accent: #ff7a18;
+  --accent-600: #ff6600;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  --shadow: 0 8px 30px rgba(6, 16, 28, 0.08);
+  --radius: 12px;
+  --max-width: 980px;
+  --gap: 20px;
+  --transition: 180ms ease;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Page layout */
+html,body{
+  height:100%;
+  margin:0;
+  background: linear-gradient(180deg,#f3f6fb 0%, #ffffff 100%);
+  color:#061022;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.auth-wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+/* Card */
+.card{
+  width:100%;
+  max-width:var(--max-width);
+  background:transparent;
+  border-radius:var(--radius);
+  display:grid;
+  grid-template-columns: 420px 1fr;
+  gap:var(--gap);
+  align-items:stretch;
+  box-shadow: none;
+}
+
+/* promo / left side */
+.promo{
+  background: linear-gradient(180deg, rgba(110,193,255,0.12), rgba(74,124,255,0.06));
+  border-radius: var(--radius);
+  padding:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: var(--shadow);
+  min-height: 420px;
+}
+.promo-inner{
+  text-align:center;
+  color:#033049;
+}
+.promo .shoe{width:120px;height:auto;margin:0 auto 12px;display:block;filter:drop-shadow(0 8px 24px rgba(6,16,28,0.06))}
+.promo h3{margin:8px 0 6px;font-size:20px;font-weight:700}
+.promo p{margin:0;color:var(--muted);font-size:14px;line-height:1.35}
+
+/* form panel */
+.form-panel{
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow: var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:420px;
+}
+.brand-row{margin-bottom:12px}
+.brand{font-size:20px;margin:0;color:#061022;letter-spacing:0.2px}
+
+/* Form elements */
+.form{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:8px}
+.label-text{font-size:13px;color:#07112a;font-weight:600}
+input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea{
+  font:inherit;
+  padding:10px 12px;
+  border:1px solid #e6e9ef;
+  border-radius:10px;
+  background: #fff;
+  transition: border var(--transition), box-shadow var(--transition);
+  color:#061022;
+  box-sizing:border-box;
+}
+input::placeholder{color:#9aa4b2}
+input:focus, textarea:focus{
+  outline:none;
+  border-color: rgba(255,122,24,0.95);
+  box-shadow: 0 4px 18px rgba(255,122,24,0.08);
+}
+
+/* password field layout */
+.password-field .pwd-wrap{display:flex;align-items:center;gap:8px}
+.pwd-wrap input{flex:1}
+.icon-btn{
+  background:transparent;border:1px solid transparent;padding:8px;border-radius:8px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--muted);
+}
+.icon-btn:hover{background:#f7f9fb;border-color:#eef2f6;color:#061022}
+
+/* row */
+.row.between{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.remember{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.remember input{width:16px;height:16px}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:15px;
+  transition:transform 140ms ease, box-shadow var(--transition);
+}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(255,122,24,0.12)}
+.btn.primary:hover{background:var(--accent-600)}
+.link-btn{color:var(--accent);text-decoration:none;font-weight:700}
+
+/* messages */
+.message{margin-top:6px;font-size:13px;min-height:20px;color:var(--muted)}
+.message.success{color:var(--success);font-weight:600}
+.message.error{color:var(--error);font-weight:600}
+
+/* muted text / small */
+.muted{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* responsive */
+@media (max-width:920px){
+  .card{grid-template-columns:1fr; padding:0; gap:16px}
+  .promo{order:2;padding:18px}
+  .form-panel{order:1;padding:22px}
+  .promo .shoe{width:96px}
+}
+
+/* mobile tweaks */
+@media (max-width:520px){
+  .form-panel{padding:18px}
+  input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea{padding:12px}
+  .btn{padding:12px}
+  .brand{font-size:18px}
+  .promo p{font-size:13px}
+}

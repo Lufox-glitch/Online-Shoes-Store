@@ -16,8 +16,8 @@ const show = (text, ok = true) => {
 };
 
 // Demo credentials (reference only — demo creation removed)
-const DEMO_EMAIL = 'demo@psstore.com';
-const DEMO_PWD = 'Demo#2025';
+const DEMO_EMAIL = 'sandeshnapit123@gmail.com';
+const DEMO_PWD = 'sandesh123';
 
 // Toggle password visibility
 togglePwd.addEventListener('click', () => {

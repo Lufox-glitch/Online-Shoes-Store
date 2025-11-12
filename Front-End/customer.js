@@ -1,4 +1,4 @@
-<script>
+
   // Cart system
   const cart = {
     items: [],
@@ -240,4 +240,3 @@
   // Init
   cart.load();
   cart.render();
-</script>

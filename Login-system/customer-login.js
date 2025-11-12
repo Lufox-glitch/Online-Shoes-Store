@@ -16,7 +16,7 @@ const show = (text, ok = true) => {
 };
 
 const DEMO_EMAIL = 'sandeshnapit123@gmail.com';
-const DEMO_PWD = 'sandesh123';
+const DEMO_PWD = 'sandesh123'; 
 
 // Create demo account on page load
 function initDemoAccount(){
@@ -26,7 +26,7 @@ function initDemoAccount(){
   if(!demoExists){
     const demoUser = {
       id: Date.now(),
-      name: 'Demo User',
+      name: 'Sandesh Napit', // CHANGED
       email: DEMO_EMAIL.toLowerCase(),
       pwd: hash(DEMO_PWD),
       role: 'customer',
@@ -68,7 +68,7 @@ if(loginForm){
     // Check if demo account
     if(email === DEMO_EMAIL.toLowerCase() && password === DEMO_PWD){
       const remember = qs('#remember').checked;
-      const current = { role: 'customer', email: DEMO_EMAIL, name: 'Demo User' };
+      const current = { role: 'customer', email: DEMO_EMAIL, name: 'Sandesh Napit' }; 
       
       if(remember){
         localStorage.setItem('currentUser', JSON.stringify(current));
@@ -76,7 +76,7 @@ if(loginForm){
         sessionStorage.setItem('currentUser', JSON.stringify(current));
       }
 
-      show(`Welcome back, Demo User!`);
+      show(`Welcome back, Sandesh Napit!`); 
       
       setTimeout(() => {
         location.href = '../Front-End/customer-dashboard.html';

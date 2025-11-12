@@ -79,7 +79,7 @@ if(loginForm){
       show(`Welcome back, Sandesh Napit!`);
       
       setTimeout(() => {
-        location.href = 'Front-End/Customer/customer-dashboard.html'; 
+        location.href = 'Front-End/customer-dashboard.html'; 
       }, 700);
 
       return;
@@ -107,7 +107,7 @@ if(loginForm){
     show(`Welcome back, ${current.name}!`);
     
     setTimeout(() => {
-      location.href = 'Front-End/Customer/customer-dashboard.html'; 
+      location.href = 'Front-End/customer-dashboard.html'; 
     }, 700);
   });
 }

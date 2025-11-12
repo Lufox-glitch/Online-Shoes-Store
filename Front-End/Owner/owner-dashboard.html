@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>P&S Owner Dashboard</title>
+  <link rel="stylesheet" href="owner.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="https://cdn-icons-png.flaticon.com/512/1250/1250679.png" alt="logo">
+      <div>
+        <div class="store">P&S Online Shoes Store</div>
+        <div class="role">Owner Dashboard</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="openCustomer" class="btn">Open Customer View</button>
+      <a href="/Login-system/owner-login.html" class="link">Sign out</a>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="panel controls">
+      <h2>Site Controls</h2>
+      <label class="row">
+        <input id="maintenance" type="checkbox"> Maintenance mode
+      </label>
+
+      <div class="row">
+        <input id="bannerText" placeholder="Promotion banner text">
+        <button id="setBanner" class="btn">Set</button>
+      </div>
+
+      <div class="row">
+        <input id="broadcastText" placeholder="Broadcast message to customers">
+        <button id="sendBroadcast" class="btn">Broadcast</button>
+      </div>
+
+      <div class="row small">
+        <button id="clearControls" class="btn danger">Clear controls</button>
+      </div>
+
+      <div id="status" class="status">Changes propagate to customers in other tabs.</div>
+    </section>
+
+    <section class="panel products">
+      <div class="panel-head">
+        <h2>Products</h2>
+        <div>
+          <button id="addProductBtn" class="btn primary">+ Add product</button>
+          <button id="importDemo" class="btn">Import demo</button>
+        </div>
+      </div>
+
+      <div id="productList" class="cards"></div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-panel">
+      <h3 id="modalTitle">Add product</h3>
+      <label>Name <input id="p_name" /></label>
+      <label>Price (रू) <input id="p_price" type="number" min="0" /></label>
+      <label>Image URL <input id="p_image" placeholder="https://..." /></label>
+      <label>Description <textarea id="p_desc"></textarea></label>
+      <div class="modal-actions">
+        <button id="saveProduct" class="btn primary">Save</button>
+        <button id="cancel" class="btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="owner.js"></script>
+</body>
+</html>

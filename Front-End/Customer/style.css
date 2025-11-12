@@ -95,25 +95,25 @@ header a ion-icon {
 }
 
 .img-slider img {
-  height: 720px;
-  width: 1080px;
+  height: 400px;
+  width: 600px;
 }
 
 @keyframes slide {
   0%, 15% { left: 0; }
-  20%, 32% { left: -1080px; }
-  35%, 47% { left: -2160px; }
-  50%, 63% { left: -3240px; }
-  66%, 79% { left: -4320px; }
-  82% { left: -5400px; }
+  20%, 32% { left: -600px; }
+  35%, 47% { left: -1200px; }
+  50%, 63% { left: -1800px; }
+  66%, 79% { left: -2400px; }
+  82% { left: -3000px; }
   100% { left: 0; }
 }
 
 .img-slider {
   display: flex;
   position: relative;
-  width: 1080px;
-  height: 720px;
+  width: 600px;
+  height: 400px;
   animation: slide 10s infinite;
   transition-duration: 2s;
 }
@@ -128,7 +128,7 @@ header a ion-icon {
 }
 
 .section1 {
-  width: 1080px;
+  width: 600px;
   overflow: hidden;
   margin: 0 auto;
   justify-content: center;

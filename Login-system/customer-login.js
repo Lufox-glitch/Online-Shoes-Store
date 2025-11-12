@@ -76,11 +76,12 @@ if(loginForm){
         sessionStorage.setItem('currentUser', JSON.stringify(current));
       }
 
-      show(`Welcome back, Sandesh Napit!`); 
+      show(`Welcome back, Sandesh Napit!`);
       
       setTimeout(() => {
-        location.href = './Front-End/customer-dashboard.html';
+        location.href = './Front-End/customer-dashboard.html'; // CHANGED
       }, 700);
+
       return;
     }
 
@@ -106,7 +107,7 @@ if(loginForm){
     show(`Welcome back, ${current.name}!`);
     
     setTimeout(() => {
-      location.href = './Front-End/customer-dashboard.html';
+      location.href = './Front-End/customer-dashboard.html'; // CHANGED
     }, 700);
   });
 }

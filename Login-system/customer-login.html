@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Store Owner Login - P&S Shoes</title>
-  <link rel="stylesheet" href="owner-login-modern.css" />
+  <title>Sign In - P&S Shoes</title>
+  <link rel="stylesheet" href="customer-login-modern.css" />
   <style>
     .back-link {
       position: absolute;
@@ -30,14 +30,13 @@
 
   <main class="auth-wrap" role="main">
     <div class="card">
-      <section class="form-panel" aria-label="Store owner login panel">
+      <section class="form-panel" aria-label="Customer login panel">
         <header class="brand-row">
-          <h1 class="brand">👨‍💼 Store Owner</h1>
-          <span class="badge">Admin Portal</span>
-          <p style="margin: 12px 0 0 0; color: #6b7280; font-size: 14px;">Manage your shoe store</p>
+          <h1 class="brand">👟 P&S Shoes</h1>
+          <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">Sign in to your account</p>
         </header>
 
-        <form id="loginForm" class="form" autocomplete="on" aria-label="Store owner login form">
+        <form id="loginForm" class="form" autocomplete="on" aria-label="Customer login form">
           <div class="field">
             <label for="email" class="label-text">Email</label>
             <input id="email" name="email" type="email" required placeholder="Enter your email" autocomplete="email" />
@@ -64,13 +63,14 @@
 
           <div id="loginMsg" class="message" role="status" aria-live="polite"></div>
 
-          <p class="muted">Customer? <a href="/Online-Shoes-Store/Login-system/customer-login.html" class="link-btn">Sign in here</a></p>
+          <p class="muted">Don't have an account? <a href="/Online-Shoes-Store/Login-system/customer-registration.html" class="link-btn">Create one</a></p>
+          <p class="muted">Store owner? <a href="/Online-Shoes-Store/Login-system/owner-login.html" class="link-btn">Sign in here</a></p>
         </form>
       </section>
     </div>
   </main>
 
-  <script src="owner-login.js"></script>
+  <script src="customer-login.js"></script>
   <script>
     // Toggle password visibility - exact same logic as registration page
     const togglePassword = document.getElementById('togglePassword');
@@ -95,7 +95,7 @@
       
       // Load saved email if exists
       window.addEventListener('load', function() {
-        const savedEmail = localStorage.getItem('rememberedOwnerEmail');
+        const savedEmail = localStorage.getItem('rememberedEmail');
         if (savedEmail) {
           document.getElementById('email').value = savedEmail;
           rememberCheckbox.checked = true;
@@ -105,9 +105,9 @@
       // Save email when form is submitted successfully
       loginForm.addEventListener('submit', function() {
         if (rememberCheckbox.checked) {
-          localStorage.setItem('rememberedOwnerEmail', document.getElementById('email').value);
+          localStorage.setItem('rememberedEmail', document.getElementById('email').value);
         } else {
-          localStorage.removeItem('rememberedOwnerEmail');
+          localStorage.removeItem('rememberedEmail');
         }
       });
     })();

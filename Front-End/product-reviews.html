@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Reviews - P&S Online Shoes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            border-radius: 8px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        textarea {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .rating-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .star {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .star:hover,
+        .star.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-color: #f59e0b;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rating-stats {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .rating-average {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .average-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .average-stars {
+            font-size: 24px;
+            color: #fbbf24;
+        }
+
+        .rating-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .rating-label {
+            width: 40px;
+            color: #6b7280;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            border-radius: 3px;
+        }
+
+        .rating-count {
+            width: 40px;
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .review-item {
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .review-stars {
+            color: #fbbf24;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .review-text {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .verified-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+
+        .product-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .product-price {
+            color: #667eea;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📝 Product Reviews & Feedback</h1>
+        <p id="productTitle" style="opacity: 0.9; font-size: 14px;">Loading product...</p>
+    </header>
+
+    <div class="container">
+        <div class="reviews-grid">
+            <div class="section">
+                <h2>Submit Your Review</h2>
+                <div id="formMessage"></div>
+
+                <div id="productInfo"></div>
+
+                <form id="reviewForm">
+                    <div class="form-group">
+                        <label>Your Rating *</label>
+                        <div class="rating-selector">
+                            <div class="star" data-rating="1">⭐</div>
+                            <div class="star" data-rating="2">⭐</div>
+                            <div class="star" data-rating="3">⭐</div>
+                            <div class="star" data-rating="4">⭐</div>
+                            <div class="star" data-rating="5">⭐</div>
+                        </div>
+                        <input type="hidden" id="selectedRating" value="5">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Review *</label>
+                        <textarea id="reviewComment" placeholder="Share your experience with this product..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <h2>Reviews & Rating</h2>
+                <div class="rating-stats">
+                    <div class="rating-average">
+                        <div class="average-number" id="avgRating">0.0</div>
+                        <div class="average-stars" id="avgStars">☆☆☆☆☆</div>
+                    </div>
+                    <div class="rating-breakdown" id="ratingBreakdown">
+                        <div style="text-align: center; color: #6b7280; font-size: 12px;">Loading...</div>
+                    </div>
+                </div>
+
+                <div id="reviewsList" class="reviews-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('productId');
+        let selectedRating = 5;
+
+        // Star rating selector
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = this.dataset.rating;
+                document.getElementById('selectedRating').value = selectedRating;
+                
+                document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+                for (let i = 0; i < selectedRating; i++) {
+                    document.querySelectorAll('.star')[i].classList.add('active');
+                }
+            });
+
+            // Set initial selection
+            if (parseInt(star.dataset.rating) <= 5) {
+                star.classList.add('active');
+            }
+        });
+
+        // Load product info
+        async function loadProduct() {
+            if (!productId) {
+                document.getElementById('productTitle').textContent = 'Product not found';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/products.php?request=detail&request=${productId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const product = data.data;
+                    document.getElementById('productTitle').textContent = product.name;
+                    
+                    const productInfo = `
+                        <div class="product-info">
+                            <div class="product-image">
+                                <img src="${product.image_url}" alt="${product.name}" onerror="this.src='/Online-Shoes-Store/Front-End/Images/placeholder.png'">
+                            </div>
+                            <div>
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-price">₨${product.price.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('productInfo').innerHTML = productInfo;
+
+                    loadReviews();
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+            }
+        }
+
+        // Load reviews
+        async function loadReviews() {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/reviews.php?request=get-product-reviews&request=${productId}?limit=50`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayReviews(data.data.reviews);
+                    loadRating();
+                }
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        // Load rating stats
+        async function loadRating() {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/reviews.php?request=get-product-rating&request=${productId}`);
+                const data = await response.json();
+
+                if (data.success && data.data.average_rating) {
+                    const avgRating = parseFloat(data.data.average_rating).toFixed(1);
+                    const totalReviews = data.data.total_reviews || 0;
+
+                    document.getElementById('avgRating').textContent = avgRating;
+                    document.getElementById('avgStars').textContent = getStarDisplay(avgRating);
+
+                    // Display rating breakdown
+                    const breakdown = `
+                        <div class="rating-bar">
+                            <span class="rating-label">5★</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${(totalReviews > 0 ? (data.data.rating_5_count || 0) / totalReviews * 100 : 0)}%"></div>
+                            </div>
+                            <span class="rating-count">${data.data.rating_5_count || 0}</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">4★</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${(totalReviews > 0 ? (data.data.rating_4_count || 0) / totalReviews * 100 : 0)}%"></div>
+                            </div>
+                            <span class="rating-count">${data.data.rating_4_count || 0}</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">3★</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${(totalReviews > 0 ? (data.data.rating_3_count || 0) / totalReviews * 100 : 0)}%"></div>
+                            </div>
+                            <span class="rating-count">${data.data.rating_3_count || 0}</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">2★</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${(totalReviews > 0 ? (data.data.rating_2_count || 0) / totalReviews * 100 : 0)}%"></div>
+                            </div>
+                            <span class="rating-count">${data.data.rating_2_count || 0}</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">1★</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${(totalReviews > 0 ? (data.data.rating_1_count || 0) / totalReviews * 100 : 0)}%"></div>
+                            </div>
+                            <span class="rating-count">${data.data.rating_1_count || 0}</span>
+                        </div>
+                    `;
+                    document.getElementById('ratingBreakdown').innerHTML = breakdown;
+                }
+            } catch (error) {
+                console.error('Error loading rating:', error);
+            }
+        }
+
+        function getStarDisplay(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalf = rating % 1 >= 0.5;
+            let stars = '';
+            for (let i = 0; i < fullStars; i++) stars += '★';
+            if (hasHalf) stars += '⭐';
+            for (let i = fullStars + (hasHalf ? 1 : 0); i < 5; i++) stars += '☆';
+            return stars;
+        }
+
+        function displayReviews(reviews) {
+            const reviewsList = document.getElementById('reviewsList');
+
+            if (!reviews || reviews.length === 0) {
+                reviewsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💬</div>
+                        <div>No reviews yet. Be the first to review!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            reviewsList.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div>
+                            <div class="reviewer-name">${review.first_name} ${review.last_name}</div>
+                            <div class="review-date">${formatDate(review.created_at)}</div>
+                        </div>
+                    </div>
+                    <div class="review-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                    <div class="review-text">${review.comment || 'Great product!'}</div>
+                    ${review.is_verified_purchase ? '<div class="verified-badge">✓ Verified Purchase</div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Submit review
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const rating = parseInt(document.getElementById('selectedRating').value);
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!comment.trim()) {
+                showMessage('formMessage', 'Please write a review', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/Online-Shoes-Store/Backend/api/reviews.php?request=create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: parseInt(productId),
+                        rating: rating,
+                        comment: comment
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('formMessage', 'Review submitted successfully!', 'success');
+                    document.getElementById('reviewForm').reset();
+                    document.querySelectorAll('.star').forEach((s, i) => {
+                        s.classList.toggle('active', i < 5);
+                    });
+                    setTimeout(() => {
+                        loadReviews();
+                    }, 1000);
+                } else {
+                    showMessage('formMessage', data.message || 'Error submitting review', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('formMessage', 'Error submitting review', 'error');
+            }
+        });
+
+        function showMessage(elementId, message, type) {
+            const messageEl = document.getElementById(elementId);
+            messageEl.textContent = message;
+            messageEl.className = 'message ' + type;
+            setTimeout(() => {
+                messageEl.className = 'message';
+            }, 5000);
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', loadProduct);
+    </script>
+</body>
+</html>

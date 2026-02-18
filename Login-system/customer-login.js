@@ -1,118 +1,79 @@
-/* filepath: /Users/prashnawaibatamang/Online Shoes Store/Online-Shoes-Store-1/Online Shoes Store/Login-system/customer-login.js */
 const qs = s => document.querySelector(s);
 const loginForm = qs('#loginForm');
-const msg = qs('#msg');
-const togglePwd = qs('#togglePwd');
+const msg = qs('#loginMsg');
 const pwdInput = qs('#password');
 
-const hash = s => btoa(s);
+// API Base URL - use absolute path from root
+const API_BASE_URL = '/Online-Shoes-Store/Backend/api';
 
-const getUsers = () => JSON.parse(localStorage.getItem('users_customer') || '[]');
-const setUsers = u => localStorage.setItem('users_customer', JSON.stringify(u));
-const show = (text, ok = true) => {
+const show = (text, type = 'success') => {
   if(!msg) return;
   msg.textContent = text;
-  msg.className = 'message ' + (ok ? 'success' : 'error');
+  msg.className = 'message ' + type;
+  msg.style.display = 'block';
 };
 
-const DEMO_EMAIL = 'sandeshnapit123@gmail.com';
-const DEMO_PWD = 'sandesh123'; 
-
-// Create demo account on page load
-function initDemoAccount(){
-  const users = getUsers();
-  const demoExists = users.find(u => u.email === DEMO_EMAIL.toLowerCase());
-  
-  if(!demoExists){
-    const demoUser = {
-      id: Date.now(),
-      name: 'Sandesh Napit', // CHANGED
-      email: DEMO_EMAIL.toLowerCase(),
-      pwd: hash(DEMO_PWD),
-      role: 'customer',
-      created: new Date().toISOString()
-    };
-    users.push(demoUser);
-    setUsers(users);
-    console.log('✓ Demo account created');
-  } else {
-    console.log('✓ Demo account already exists');
-  }
-}
-
-// Toggle password visibility
-if(togglePwd && pwdInput){
-  togglePwd.addEventListener('click', () => {
-    const isPwd = pwdInput.getAttribute('type') === 'password';
-    pwdInput.setAttribute('type', isPwd ? 'text' : 'password');
-    togglePwd.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
-  });
-}
-
-function validateEmail(e){ 
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); 
-}
-
-// Login handler
+// Login handler with backend API
 if(loginForm){
-  loginForm.addEventListener('submit', e => {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = qs('#email').value.trim().toLowerCase();
+    
+    const email = qs('#email').value.trim();
     const password = qs('#password').value;
+    const rememberMe = qs('#remember').checked;
     
-    if(!validateEmail(email) || password.length < 1){
-      show('Enter valid credentials', false);
+    if(!email || !password){
+      show('Please enter email and password', 'error');
       return;
     }
 
-    // Check if demo account
-    if(email === DEMO_EMAIL.toLowerCase() && password === DEMO_PWD){
-      const remember = qs('#remember').checked;
-      const current = { role: 'customer', email: DEMO_EMAIL, name: 'Sandesh Napit' }; 
+    try {
+      show('Logging in...', 'success');
       
-      if(remember){
-        localStorage.setItem('currentUser', JSON.stringify(current));
+      const response = await fetch(`${API_BASE_URL}/auth.php?request=login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          remember_me: rememberMe
+        })
+      });
+
+      const data = await response.json();
+
+      if(data.success){
+        // Clear any old owner data first
+        localStorage.removeItem('user');
+        localStorage.removeItem('currentOwner');
+        
+        // Store user info
+        const userInfo = {
+          id: data.data.user_id,
+          email: data.data.email,
+          first_name: data.data.first_name,
+          last_name: data.data.last_name,
+          role: data.data.role
+        };
+        
+        if(rememberMe){
+          localStorage.setItem('currentUser', JSON.stringify(userInfo));
+        } else {
+          sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
+        }
+
+        show(`Welcome back, ${data.data.first_name}!`, 'success');
+        
+        setTimeout(() => {
+          window.location.href = '/Online-Shoes-Store/Front-End/customer-dashboard.html';
+        }, 800);
       } else {
-        sessionStorage.setItem('currentUser', JSON.stringify(current));
+        show(data.message || 'Login failed', 'error');
       }
-
-      show(`Welcome back, Sandesh Napit!`);
-      
-      setTimeout(() => {
-        location.href = 'Front-End/customer-dashboard.html'; 
-      }, 700);
-
-      return;
+    } catch(error){
+      console.error('Login error:', error);
+      show('Network error. Please try again: ' + error.message, 'error');
     }
-
-    // Check regular users
-    const users = getUsers();
-    const user = users.find(x => x.email === email && x.pwd === hash(password));
-    
-    if(!user){
-      show('Invalid credentials', false);
-      return;
-    }
-
-    // Success - save user
-    const remember = qs('#remember').checked;
-    const current = { role: 'customer', email: user.email, name: user.name || 'Customer' };
-    
-    if(remember){
-      localStorage.setItem('currentUser', JSON.stringify(current));
-    } else {
-      sessionStorage.setItem('currentUser', JSON.stringify(current));
-    }
-
-    show(`Welcome back, ${current.name}!`);
-    
-    setTimeout(() => {
-      location.href = 'Front-End/customer-dashboard.html'; 
-    }, 700);
   });
 }
-
-// Initialize demo account when page loads
-document.addEventListener('DOMContentLoaded', initDemoAccount);
-// Also try immediately
-initDemoAccount();

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - P&S Online Shoes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .orders-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-id {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-processing {
+            background: #bfdbfe;
+            color: #1e3a8a;
+        }
+
+        .status-shipped {
+            background: #c7d2fe;
+            color: #3730a3;
+        }
+
+        .status-delivered {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+        }
+
+        .order-items h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .item-name {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .item-price {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #333;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .empty-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .empty-text {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .empty-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .empty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .delivery-info {
+            background: #f0fdf4;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .delivery-info strong {
+            color: #166534;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+
+            .order-header {
+                flex-direction: column;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📦 My Orders</h1>
+        <a href="/Online-Shoes-Store/Front-End/customer-dashboard.html" class="back-btn">← Back to Dashboard</a>
+    </header>
+
+    <div class="container">
+        <div id="ordersContainer" class="orders-grid">
+            <div class="loading">Loading your orders...</div>
+        </div>
+    </div>
+
+    <script src="/Online-Shoes-Store/Front-End/api-client.js"></script>
+    <script>
+        // Get filter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterType = urlParams.get('filter') || 'all';
+
+        // Update page title based on filter
+        document.title = filterType === 'recent' ? 'Recent Orders - P&S Online Shoes' : 'My Orders - P&S Online Shoes';
+        document.querySelector('h1').textContent = filterType === 'recent' ? '📋 Recent Orders' : '📦 All Orders';
+
+        // Load user orders
+        async function loadOrders() {
+            try {
+                // Check if user is logged in (either localStorage or sessionStorage)
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
+                
+                if (!currentUser) {
+                    document.getElementById('ordersContainer').innerHTML = `
+                        <div class="error-message">Please log in to view your orders. <a href="/Online-Shoes-Store/Login-system/customer-login.html" style="color: #667eea; text-decoration: underline;">Login here</a></div>
+                    `;
+                    return;
+                }
+
+                const response = await fetch('/Online-Shoes-Store/Backend/api/orders.php?request=my-orders', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                console.log('API Response:', data); // Debug log
+
+                if (data.success && data.data && data.data.orders && data.data.orders.length > 0) {
+                    let orders = data.data.orders;
+                    
+                    // Filter to recent orders (last 5) if filter=recent
+                    if (filterType === 'recent') {
+                        orders = orders.slice(0, 5);
+                    }
+                    
+                    displayOrders(orders);
+                } else if (data.success === false && data.message === 'Unauthorized') {
+                    document.getElementById('ordersContainer').innerHTML = `
+                        <div class="error-message">Your session has expired. Please <a href="/Online-Shoes-Store/Login-system/customer-login.html" style="color: #667eea; text-decoration: underline;">login again</a>.</div>
+                    `;
+                } else {
+                    document.getElementById('ordersContainer').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🛒</div>
+                            <div class="empty-title">No Orders Yet</div>
+                            <div class="empty-text">You haven't placed any orders. Start shopping now!</div>
+                            <a href="/Online-Shoes-Store/Front-End/customer-dashboard.html" class="empty-btn">Shop Now</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('ordersContainer').innerHTML = `
+                    <div class="error-message">Error loading orders. Please try again later.</div>
+                `;
+            }
+        }
+
+        async function displayOrders(orders) {
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = '';
+
+            for (const order of orders) {
+                // Load delivery info
+                const deliveryInfo = await getDeliveryInfo(order.id);
+                const paymentInfo = await getPaymentInfo(order.id);
+
+                const statusClass = `status-${order.status.toLowerCase().replace(/\s+/g, '_')}`;
+                const deliveryHtml = deliveryInfo ? `
+                    <div class="delivery-info">
+                        <strong>📍 Delivery:</strong> ${deliveryInfo.delivery_status || 'Pending'} - Est: ${formatDate(deliveryInfo.estimated_delivery_date)}
+                        ${deliveryInfo.tracking_number ? `<br><strong>🔍 Tracking #:</strong> ${deliveryInfo.tracking_number}` : ''}
+                    </div>
+                ` : '';
+
+                const orderHtml = `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">Order #${order.id}</div>
+                                <div style="font-size: 13px; color: #6b7280; margin-top: 5px;">${formatDate(order.created_at)}</div>
+                            </div>
+                            <span class="order-status ${statusClass}">${order.status.toUpperCase()}</span>
+                        </div>
+
+                        <div class="order-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Total Amount</div>
+                                <div class="detail-value">₨${parseFloat(order.total_amount).toLocaleString()}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Payment Method</div>
+                                <div class="detail-value">${paymentInfo ? paymentInfo.payment_method.replace('-', ' ').toUpperCase() : 'Pending'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Status</div>
+                                <div class="detail-value">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</div>
+                            </div>
+                        </div>
+
+                        ${deliveryHtml}
+
+                        <div class="order-actions">
+                            <a href="/Online-Shoes-Store/Front-End/order-confirmation.html?orderId=${order.id}" class="btn btn-primary">View Details</a>
+                            <button class="btn btn-secondary" onclick="downloadInvoice(${order.id})">📄 Invoice</button>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += orderHtml;
+            }
+        }
+
+        async function getDeliveryInfo(orderId) {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/delivery.php?request=get-order-delivery/${orderId}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                return data.success ? data.data : null;
+            } catch (error) {
+                console.error('Error loading delivery:', error);
+                return null;
+            }
+        }
+
+        async function getPaymentInfo(orderId) {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/payments.php?request=get-order-payment/${orderId}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                return data.success ? data.data : null;
+            } catch (error) {
+                console.error('Error loading payment:', error);
+                return null;
+            }
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function downloadInvoice(orderId) {
+            alert('Invoice feature coming soon! Order #' + orderId);
+        }
+
+        // Load orders on page load
+        window.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
+</body>
+</html>

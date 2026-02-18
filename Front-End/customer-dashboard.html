@@ -1,412 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>P&S Online Shoes Store</title>
-        <link rel="stylesheet" href="./Customer/style.css" />
-        <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
-        <style>
-  /* Cart system styles */
-  .cart-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:#ff7a18;color:#fff;border:none;cursor:pointer;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(255,122,24,0.3);z-index:999}
-  .cart-btn:hover{background:#ff6600}
-  .cart-count{position:absolute;top:-8px;right:-8px;width:24px;height:24px;background:#ff4e4e;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-  .cart-sidebar{position:fixed;right:-380px;top:0;width:380px;height:100vh;background:#fff;box-shadow:-8px 0 20px rgba(0,0,0,0.15);transition:right 0.3s;z-index:1000;display:flex;flex-direction:column}
-  .cart-sidebar.open{right:0}
-  .cart-header{padding:16px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
-  .cart-close{background:none;border:none;font-size:20px;cursor:pointer}
-  .cart-items{flex:1;overflow-y:auto;padding:12px}
-  .cart-item{padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .cart-item-info{flex:1}
-  .cart-item-name{font-weight:700;font-size:13px}
-  .cart-item-price{color:#ff7a18;font-weight:700}
-  .cart-item-qty{display:flex;gap:4px;align-items:center;margin-top:4px}
-  .cart-item-qty button{padding:2px 6px;border:1px solid #ddd;background:none;cursor:pointer;border-radius:3px}
-  .cart-item-remove{background:#ff4e4e;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:12px}
-  .cart-empty{padding:20px;text-align:center;color:#6b7280}
-  .cart-footer{padding:16px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:8px}
-  .cart-total{display:flex;justify-content:space-between;font-weight:700;font-size:16px}
-  .checkout-btn{padding:10px;background:#ff7a18;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600}
-  .checkout-btn:hover{background:#ff6600}
-  .add-to-cart-btn{padding:6px 10px;background:#ff7a18;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px;margin-top:6px;width:100%}
-  .add-to-cart-btn:hover{background:#ff6600}
-  
-  /* Payment modal */
-  .payment-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(2,6,23,0.7);display:none;align-items:center;justify-content:center;z-index:2000;overflow-y:auto;padding:20px}
-  .payment-modal.open{display:flex}
-  .payment-panel{background:#fff;border-radius:10px;padding:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
-  .payment-panel h2{margin:0 0 16px 0;color:#061022}
-  .payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-  .payment-method{padding:16px;border:2px solid #ddd;border-radius:8px;cursor:pointer;text-align:center;transition:all 0.2s}
-  .payment-method:hover{border-color:#ff7a18;background:#fff3e8}
-  .payment-method.selected{border-color:#ff7a18;background:#fff3e8}
-  .payment-method .name{font-weight:700;font-size:14px;color:#061022}
-  .payment-method .number{font-size:13px;color:#6b7280;margin-top:8px}
-  .payment-details{margin:16px 0;padding:12px;background:#f3f4f6;border-radius:8px}
-  .detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ddd}
-  .detail-row:last-child{border:none}
-  .detail-row .label{font-weight:600;color:#061022}
-  .detail-row .value{color:#6b7280}
-  
-  /* Screenshot upload */
-  .screenshot-section{margin:16px 0;padding:12px;border:2px dashed #ddd;border-radius:8px}
-  .screenshot-section h4{margin:0 0 10px 0;color:#061022}
-  .upload-input{display:none}
-  .upload-label{display:block;padding:10px;background:#f3f4f6;border-radius:6px;text-align:center;cursor:pointer;font-weight:600;color:#061022;margin-bottom:8px;transition:all 0.2s}
-  .upload-label:hover{background:#e5e7eb;border-color:#ff7a18}
-  .screenshot-preview{width:100%;max-width:200px;border-radius:6px;margin-top:8px;display:none}
-  .screenshot-filename{font-size:12px;color:#6b7280;margin-top:8px}
-  
-  /* COD section */
-  .cod-option{padding:12px;background:#f0f9ff;border:2px solid #bfdbfe;border-radius:8px;margin:10px 0;cursor:pointer;transition:all 0.2s}
-  .cod-option:hover{background:#e0f2fe;border-color:#0ea5e9}
-  .cod-option.selected{background:#dbeafe;border-color:#ff7a18}
-  .cod-option input[type="radio"]{margin-right:8px;cursor:pointer}
-  
-  .payment-actions{display:flex;gap:8px;margin-top:16px}
-  .payment-actions button{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-weight:600}
-  .confirm-pay{background:#ff7a18;color:#fff}
-  .confirm-pay:hover{background:#ff6600}
-  .cancel-pay{background:#f3f4f6;color:#061022}
-  
-  /* Delivery details modal */
-  .delivery-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(2,6,23,0.7);display:none;align-items:center;justify-content:center;z-index:2100;overflow-y:auto;padding:20px}
-  .delivery-modal.open{display:flex}
-  .delivery-panel{background:#fff;border-radius:10px;padding:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
-  .delivery-panel h2{margin:0 0 16px 0;color:#061022}
-  .form-group{margin-bottom:12px}
-  .form-group label{display:block;font-weight:600;color:#061022;margin-bottom:6px;font-size:14px}
-  .form-group input,.form-group textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:14px;box-sizing:border-box}
-  .form-group textarea{resize:vertical;min-height:80px}
-  .form-group input:focus,.form-group textarea:focus{outline:none;border-color:#ff7a18;box-shadow:0 0 0 2px rgba(255,122,24,0.1)}
-  .delivery-actions{display:flex;gap:8px;margin-top:16px}
-  .delivery-actions button{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-weight:600}
-  .submit-order{background:#ff7a18;color:#fff}
-  .submit-order:hover{background:#ff6600}
-  
-  .success-message{position:fixed;top:20px;right:20px;background:#b7f1c6;color:#065f3e;padding:16px;border-radius:8px;display:none;z-index:3000;box-shadow:0 6px 18px rgba(0,0,0,0.15);max-width:300px}
-  .success-message.show{display:block}
-  .success-message.error{background:#fecaca;color:#7c2d12}
-  
-  .items{position:relative}
-  
-  @media (max-width:600px){
-    .cart-sidebar{width:100%;right:-100%}
-    .payment-panel,.delivery-panel{max-width:100%}
-    .payment-methods{grid-template-columns:1fr}
-  }
-</style>
-    </head>
-    <body>
-        
-<header id="home">
-    <div class="logo"><a href="#">P&S Online Shoes Store</a></div>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P&S Online Shoes - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <div class="menu" aria-hidden="true">
-        <button class="close" type="button" aria-label="Close menu">
-            <ion-icon name="close"></ion-icon>
-        </button>
-        <ul>
-            <li><a href="#home" class="under">HOME</a></li>
-            <li><a href="#shop" class="under">SHOP</a></li>
-            <li><a href="#our-products" class="under">OUR PRODUCTS</a></li>
-            <li><a href="#contact" class="under">CONTACT US</a></li>
-            <li><a href="#about" class="under">ABOUT US</a></li>
-        </ul>
-    </div>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f8f8;
+            min-height: 100vh;
+        }
 
-    <div class="search">
-        <input type="text" placeholder="Search products" id="input" aria-label="Search products" />
-        <button class="search-btn" type="button" aria-label="Search">
-            <ion-icon class="s" name="search"></ion-icon>
-        </button>
-    </div>
+        header {
+            background: #000;
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-    <div class="heading">
-        <ul>
-            <li><a href="#home" class="under">HOME</a></li>
-            <li><a href="#shop" class="under">SHOP</a></li>
-            <li><a href="#our-products" class="under">OUR PRODUCTS</a></li>
-            <li><a href="#contact" class="under">CONTACT US</a></li>
-            <li><a href="#about" class="under">ABOUT US</a></li>
-        </ul>
-    </div>
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-    <div class="heading1">
-        <button class="ham" type="button" aria-label="Open menu">
-            <ion-icon name="menu"></ion-icon>
-        </button>
-    </div>
-</header>
-        <section id="shop">
-            <div class="section">
-                <div class="section1">
-                    <div class="img-slider">
-                        <img src="./Images/under armour project rock 26.jpeg" alt="" class="img" />
-                        <img src="./Images/Puma run 3.jpeg" alt="" class="img" />
-                        <img src="./Images/saucony ride 17.jpeg" alt="" class="img" />
-                        <img src="./Images/columbia outdry 39.jpeg" alt="" class="img" />
-                        <img src="./Images/reebok classic 23.jpeg" alt="" class="img" />
-                        <img src="./Images/asics gt-2000 25.jpeg" alt="" class="img">
-                        <img src="./Images/merrell trail 32.jpeg" alt="" class="img">
-                        <img src="./Images/addidas ultraboost 2.jpeg" alt="" class="img">
-                        <img src="./Images/reebok flex 4.jpeg" alt="" class="img">
-                        <img src="./Images/underarmour hovr 6.jpeg" alt="" class="img">
-                        <img src="./Images/Vans old skool 9.jpeg" alt="" class="img">
-                        <img src="./Images/salomon speedcross 11.jpeg" alt="" class="img">
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+        }
 
-                    </div>
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: #000;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #000;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .brand-section {
+            margin-bottom: 50px;
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
+            display: inline-block;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #000;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .product-description {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #ff9800;
+            color: white;
+            border: 1px solid #ff9800;
+        }
+
+        .btn-primary:hover {
+            background: #f57c00;
+            border-color: #f57c00;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #000;
+            border: 1px solid #000;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            background: #000;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .orders-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-processing {
+            background: #cfe2ff;
+            color: #084298;
+            border: 1px solid #b6d4fe;
+        }
+
+        .status-shipped {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .cart-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ff9800;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+            transition: all 0.3s;
+        }
+
+        .cart-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.6);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 28px;
+            height: 28px;
+            background: #000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            border: 2px solid white;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #f0f0f0;
+            color: #000;
+            border: 1px solid #333;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8f8f8;
+            color: #000;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">P&S Shoes</div>
+            <div class="user-info">
+                <div class="user-avatar" id="userInitial">U</div>
+                <div>
+                    <div id="userName" style="font-weight: 600;">Customer</div>
                 </div>
-                <section id="our-products">
-                <div class="section2">
-                    <div class="container">
-                        <!-- All 40 products with add to cart buttons -->
-                        <div class="items"><div class="img img1"><img src="./Images/Nike Air 1.jpeg" alt="NIKE Air 1" /></div><div class="name">NIKE AIR 1</div><div class="price">रू 4,999</div><div class="info">Lightweight running shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'nike-air-1', name:'NIKE AIR 1', price:4999, image:'./Images/Nike Air 1.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/addidas ultraboost 2.jpeg" alt="ADIDAS Ultraboost 2" /></div><div class="name">ADIDAS ULTRABOOST 2</div><div class="price">रू 9,499</div><div class="info">Responsive cushioning.</div><button class="add-to-cart-btn" onclick="cart.add({id:'adidas-ub2', name:'ADIDAS ULTRABOOST 2', price:9499, image:'./Images/addidas ultraboost 2.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/Puma run 3.jpeg" alt="PUMA Run 3" /></div><div class="name">PUMA RUN 3</div><div class="price">रू 3,899</div><div class="info">Everyday trainer.</div><button class="add-to-cart-btn" onclick="cart.add({id:'puma-run3', name:'PUMA RUN 3', price:3899, image:'./Images/Puma run 3.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/reebok flex 4.jpeg" alt="REEBOK Flex 4" /></div><div class="name">REEBOK FLEX 4</div><div class="price">रू 3,299</div><div class="info">Flexible sole for workouts.</div><button class="add-to-cart-btn" onclick="cart.add({id:'reebok-flex4', name:'REEBOK FLEX 4', price:3299, image:'./Images/reebok flex 4.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/new balance 574.jpeg" alt="NEW BALANCE 574" /></div><div class="name">NEW BALANCE 574</div><div class="price">रू 6,499</div><div class="info">Classic casual sneaker.</div><button class="add-to-cart-btn" onclick="cart.add({id:'nb574', name:'NEW BALANCE 574', price:6499, image:'./Images/new balance 574.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/asics gel kayano 5.jpeg" alt="ASICS Gel Kayano 5" /></div><div class="name">ASICS GEL KAYANO 5</div><div class="price">रू 10,299</div><div class="info">Stability running shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'asics-gk5', name:'ASICS GEL KAYANO 5', price:10299, image:'./Images/asics gel kayano 5.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/underarmour hovr 6.jpeg" alt="UNDER ARMOUR HOVR 6" /></div><div class="name">UNDER ARMOUR HOVR 6</div><div class="price">रू 8,199</div><div class="info">Cushioned training shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'ua-hovr6', name:'UNDER ARMOUR HOVR 6', price:8199, image:'./Images/underarmour hovr 6.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/skechers go walk 7.jpeg" alt="SKECHERS Go Walk 7" /></div><div class="name">SKECHERS GO WALK 7</div><div class="price">रू 4,599</div><div class="info">Comfort walking shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'skechers-gw7', name:'SKECHERS GO WALK 7', price:4599, image:'./Images/skechers go walk 7.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/convers all star 8.jpg" alt="CONVERSE All Star 8" /></div><div class="name">CONVERSE ALL STAR 8</div><div class="price">रू 3,199</div><div class="info">Classic canvas sneaker.</div><button class="add-to-cart-btn" onclick="cart.add({id:'converse-as8', name:'CONVERSE ALL STAR 8', price:3199, image:'./Images/convers all star 8.jpg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/Vans old skool 9.jpeg" alt="VANS Old Skool 9" /></div><div class="name">VANS OLD SKOOL 9</div><div class="price">रू 3,499</div><div class="info">Skate-style shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'vans-os9', name:'VANS OLD SKOOL 9', price:3499, image:'./Images/Vans old skool 9.jpeg'})">Add to Cart</button></div>
-
-                        <!-- 11-20 -->
-                        <div class="items"><div class="img img1"><img src="./Images/Fila disruptor 10.jpeg" alt="FILA Disruptor 10" /></div><div class="name">FILA DISRUPTOR 10</div><div class="price">रू 5,299</div><div class="info">Chunky fashion sneaker.</div><button class="add-to-cart-btn" onclick="cart.add({id:'fila-d10', name:'FILA DISRUPTOR 10', price:5299, image:'./Images/Fila disruptor 10.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/salomon speedcross 11.jpeg" alt="SALOMON Speedcross 11" /></div><div class="name">SALOMON SPEEDCROSS 11</div><div class="price">रू 12,499</div><div class="info">Trail running grip.</div><button class="add-to-cart-btn" onclick="cart.add({id:'salomon-sc11', name:'SALOMON SPEEDCROSS 11', price:12499, image:'./Images/salomon speedcross 11.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/merrell jungle 12.jpeg" alt="MERRELL Jungle 12" /></div><div class="name">MERRELL JUNGLE 12</div><div class="price">रू 7,199</div><div class="info">Outdoor casual.</div><button class="add-to-cart-btn" onclick="cart.add({id:'merrell-j12', name:'MERRELL JUNGLE 12', price:7199, image:'./Images/merrell jungle 12.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/timberland 6-inch 13.jpeg" alt="TIMBERLAND 6 Inch 13" /></div><div class="name">TIMBERLAND 6-INCH 13</div><div class="price">रू 14,999</div><div class="info">Durable leather boot.</div><button class="add-to-cart-btn" onclick="cart.add({id:'timberland-6in13', name:'TIMBERLAND 6-INCH 13', price:14999, image:'./Images/timberland 6-inch 13.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/clarks desert boot 14.jpeg" alt="CLARKS Desert Boot 14" /></div><div class="name">CLARKS DESERT BOOT 14</div><div class="price">रू 9,199</div><div class="info">Smart casual boot.</div><button class="add-to-cart-btn" onclick="cart.add({id:'clarks-db14', name:'CLARKS DESERT BOOT 14', price:9199, image:'./Images/clarks desert boot 14.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/ecco soft 15.jpeg" alt="ECCO Soft 15" /></div><div class="name">ECCO SOFT 15</div><div class="price">रू 11,499</div><div class="info">Comfort leather shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'ecco-s15', name:'ECCO SOFT 15', price:11499, image:'./Images/ecco soft 15.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/hoka clifton 16.jpeg" alt="HOKA Clifton 16" /></div><div class="name">HOKA CLIFTON 16</div><div class="price">रू 13,299</div><div class="info">Max cushion runner.</div><button class="add-to-cart-btn" onclick="cart.add({id:'hoka-c16', name:'HOKA CLIFTON 16', price:13299, image:'./Images/hoka clifton 16.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/saucony ride 17.jpeg" alt="SAUCONY Ride 17" /></div><div class="name">SAUCONY RIDE 17</div><div class="price">रू 8,799</div><div class="info">Smooth ride cushioning.</div><button class="add-to-cart-btn" onclick="cart.add({id:'saucony-r17', name:'SAUCONY RIDE 17', price:8799, image:'./Images/saucony ride 17.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/brooks glycerin 18.jpeg" alt="BROOKS Glycerin 18" /></div><div class="name">BROOKS GLYCERIN 18</div><div class="price">रू 10,999</div><div class="info">Plush cushioning.</div><button class="add-to-cart-btn" onclick="cart.add({id:'brooks-g18', name:'BROOKS GLYCERIN 18', price:10999, image:'./Images/brooks glycerin 18.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/columbia venture 19 shoes.jpeg" alt="COLUMBIA Venture 19" /></div><div class="name">COLUMBIA VENTURE 19</div><div class="price">रू 6,599</div><div class="info">Waterproof trail shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'columbia-v19', name:'COLUMBIA VENTURE 19', price:6599, image:'./Images/columbia venture 19 shoes.jpeg'})">Add to Cart</button></div>
-
-                        <!-- 21-30 -->
-                        <div class="items"><div class="img img1"><img src="./Images/addidas gazelle 20.jpeg" alt="ADIDAS Gazelle 20" /></div><div class="name">ADIDAS GAZELLE 20</div><div class="price">रू 5,899</div><div class="info">Retro lifestyle shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'adidas-g20', name:'ADIDAS GAZELLE 20', price:5899, image:'./Images/addidas gazelle 20.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/nike pegasus 21.jpeg" alt="NIKE Pegasus 21" /></div><div class="name">NIKE PEGASUS 21</div><div class="price">रू 9,799</div><div class="info">Daily running shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'nike-p21', name:'NIKE PEGASUS 21', price:9799, image:'./Images/nike pegasus 21.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/puma rs 22.jpg" alt="PUMA RS 22" /></div><div class="name">PUMA RS 22</div><div class="price">रू 4,299</div><div class="info">Retro runner.</div><button class="add-to-cart-btn" onclick="cart.add({id:'puma-rs22', name:'PUMA RS 22', price:4299, image:'./Images/puma rs 22.jpg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/reebok classic 23.jpeg" alt="REEBOK Classic 23" /></div><div class="name">REEBOK CLASSIC 23</div><div class="price">रू 4,199</div><div class="info">Timeless sneaker.</div><button class="add-to-cart-btn" onclick="cart.add({id:'reebok-c23', name:'REEBOK CLASSIC 23', price:4199, image:'./Images/reebok classic 23.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/new balance fuelcell 24.jpeg" alt="NEW BALANCE Fuelcell 24" /></div><div class="name">NEW BALANCE FUELCELL 24</div><div class="price">रू 8,999</div><div class="info">Performance running.</div><button class="add-to-cart-btn" onclick="cart.add({id:'nb-fc24', name:'NEW BALANCE FUELCELL 24', price:8999, image:'./Images/new balance fuelcell 24.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/asics gt-2000 25.jpeg" alt="ASICS GT-2000 25" /></div><div class="name">ASICS GT-2000 25</div><div class="price">रू 9,199</div><div class="info">Stability support.</div><button class="add-to-cart-btn" onclick="cart.add({id:'asics-gt25', name:'ASICS GT-2000 25', price:9199, image:'./Images/asics gt-2000 25.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/under armour project rock 26.jpeg" alt="UNDER ARMOUR Project Rock 26" /></div><div class="name">UNDER ARMOUR PROJECT ROCK 26</div><div class="price">रू 7,499</div><div class="info">Gym and training shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'ua-pr26', name:'UNDER ARMOUR PROJECT ROCK 26', price:7499, image:'./Images/under armour project rock 26.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/skechers d'lites 27.jpeg" alt="SKECHERS D'Lites 27" /></div><div class="name">SKECHERS D'LITES 27</div><div class="price">रू 5,199</div><div class="info">Casual comfort.</div><button class="add-to-cart-btn" onclick="cart.add({id:'skechers-dl27', name:'SKECHERS D\'LITES 27', price:5199, image:'./Images/skechers d'lites 27.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/converse chuck 70 28.jpeg" alt="CONVERSE Chuck 70 28" /></div><div class="name">CONVERSE CHUCK 70 28</div><div class="price">रू 3,799</div><div class="info">Heritage canvas shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'converse-c70-28', name:'CONVERSE CHUCK 70 28', price:3799, image:'./Images/converse chuck 70 28.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/vans era 29.jpeg" alt="VANS Era 29" /></div><div class="name">VANS ERA 29</div><div class="price">रू 3,299</div><div class="info">Classic low-top.</div><button class="add-to-cart-btn" onclick="cart.add({id:'vans-e29', name:'VANS ERA 29', price:3299, image:'./Images/vans era 29.jpeg'})">Add to Cart</button></div>
-
-                        <!-- 31-40 -->
-                        <div class="items"><div class="img img1"><img src="./Images/fila ray 30.jpeg" alt="FILA Ray 30" /></div><div class="name">FILA RAY 30</div><div class="price">रू 4,999</div><div class="info">Sporty silhouette.</div><button class="add-to-cart-btn" onclick="cart.add({id:'fila-r30', name:'FILA RAY 30', price:4999, image:'./Images/fila ray 30.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/salamon xa pro 31.jpeg" alt="SALOMON XA Pro 31" /></div><div class="name">SALOMON XA PRO 31</div><div class="price">रू 13,299</div><div class="info">All-terrain runner.</div><button class="add-to-cart-btn" onclick="cart.add({id:'salomon-xap31', name:'SALOMON XA PRO 31', price:13299, image:'./Images/salamon xa pro 31.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/merrell trail 32.jpeg" alt="MERRELL Trail 32" /></div><div class="name">MERRELL TRAIL 32</div><div class="price">रू 6,899</div><div class="info">Trail-ready comfort.</div><button class="add-to-cart-btn" onclick="cart.add({id:'merrell-t32', name:'MERRELL TRAIL 32', price:6899, image:'./Images/merrell trail 32.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/timberland rugged 33.jpeg" alt="TIMBERLAND Rugged 33" /></div><div class="name">TIMBERLAND RUGGED 33</div><div class="price">रू 13,499</div><div class="info">Strong outdoor boot.</div><button class="add-to-cart-btn" onclick="cart.add({id:'timberland-r33', name:'TIMBERLAND RUGGED 33', price:13499, image:'./Images/timberland rugged 33.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/clarks wallabee 34.jpeg" alt="CLARKS Wallabee 34" /></div><div class="name">CLARKS WALLABEE 34</div><div class="price">रू 8,999</div><div class="info">Iconic casual shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'clarks-w34', name:'CLARKS WALLABEE 34', price:8999, image:'./Images/clarks wallabee 34.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/ecco track 35.jpeg" alt="ECCO Track 35" /></div><div class="name">ECCO TRACK 35</div><div class="price">रू 12,199</div><div class="info">Rugged everyday shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'ecco-t35', name:'ECCO TRACK 35', price:12199, image:'./Images/ecco track 35.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/hoka bondi 36.jpeg" alt="HOKA Bondi 36" /></div><div class="name">HOKA BONDI 36</div><div class="price">रू 14,299</div><div class="info">Maximum cushion.</div><button class="add-to-cart-btn" onclick="cart.add({id:'hoka-b36', name:'HOKA BONDI 36', price:14299, image:'./Images/hoka bondi 36.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/saucony kinvara 37.jpeg" alt="SAUCONY Kinvara 37" /></div><div class="name">SAUCONY KINVARA 37</div><div class="price">रू 7,999</div><div class="info">Lightweight race shoe.</div><button class="add-to-cart-btn" onclick="cart.add({id:'saucony-k37', name:'SAUCONY KINVARA 37', price:7999, image:'./Images/saucony kinvara 37.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/brooks ghost 38.jpeg" alt="BROOKS Ghost 38" /></div><div class="name">BROOKS GHOST 38</div><div class="price">रू 10,499</div><div class="info">Smooth cushioning.</div><button class="add-to-cart-btn" onclick="cart.add({id:'brooks-gh38', name:'BROOKS GHOST 38', price:10499, image:'./Images/brooks ghost 38.jpeg'})">Add to Cart</button></div>
-                        <div class="items"><div class="img img1"><img src="./Images/columbia outdry 39.jpeg" alt="COLUMBIA Outdry 39" /></div><div class="name">COLUMBIA OUTDRY 39</div><div class="price">रू 7,299</div><div class="info">Waterproof comfort.</div><button class="add-to-cart-btn" onclick="cart.add({id:'columbia-od39', name:'COLUMBIA OUTDRY 39', price:7299, image:'./Images/columbia outdry 39.jpeg'})">Add to Cart</button></div> 
-                    </div>
-                </div>
             </div>
-        </section>
-        
-        <!-- Cart Button -->
-        <button id="cartBtn" class="cart-btn">
-          🛒
-          <span id="cartCount" class="cart-count" style="display:none">0</span>
-        </button>
+        </div>
+        <div class="header-right">
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
 
-        <!-- Cart Sidebar -->
-        <aside class="cart-sidebar" id="cartSidebar">
-          <div class="cart-header">
-            <h3 style="margin:0">Shopping Cart</h3>
-            <button class="cart-close" id="cartClose">✕</button>
-          </div>
-          <div class="cart-items" id="cartItems">
-            <div class="cart-empty">Your cart is empty</div>
-          </div>
-          <div class="cart-footer">
-            <div class="cart-total">
-              <span>Total:</span>
-              <span id="cartTotal">रू 0</span>
-            </div>
-            <button id="checkoutBtn" class="checkout-btn">Proceed to Checkout</button>
-          </div>
-        </aside>
+    <div class="main-container">
+        <div id="message" class="message"></div>
 
-        <!-- Payment Modal -->
-        <div class="payment-modal" id="paymentModal">
-          <div class="payment-panel">
-            <h2>Payment Method</h2>
-            
-            <div class="payment-methods">
-              <div class="payment-method" data-method="esewa">
-                <div class="name">📱 Esewa</div>
-                <div class="number">9765222094</div>
-              </div>
-              <div class="payment-method" data-method="khalti">
-                <div class="name">💳 Khalti</div>
-                <div class="number">9765222094</div>
-              </div>
-            </div>
+        <h1 class="section-title">Your Shopping Hub</h1>
 
-            <!-- COD Option -->
-            <div class="cod-option" data-method="cod" onclick="selectPaymentMethod(this, 'cod')">
-              <label>
-                <input type="radio" name="payment" value="cod">
-                <strong>💵 Cash on Delivery (COD)</strong>
-                <div style="font-size:12px;color:#6b7280;margin-top:4px">Pay when product is delivered</div>
-              </label>
+        <div class="grid-2">
+            <div class="card stat-card">
+                <div class="stat-icon" style="font-size: 32px; color: #1a73e8;">▪</div>
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
             </div>
-
-            <!-- Screenshot Upload (for online payment) -->
-            <div id="screenshotSection" class="screenshot-section" style="display:none">
-              <h4>Payment Proof</h4>
-              <label class="upload-label" for="screenshotInput">
-                📸 Upload Payment Screenshot
-              </label>
-              <input id="screenshotInput" class="upload-input" type="file" accept="image/*" />
-              <img id="screenshotPreview" class="screenshot-preview" />
-              <div id="screenshotFilename" class="screenshot-filename"></div>
+            <div class="card stat-card">
+                <div class="stat-icon" style="font-size: 32px; color: #1a73e8;">▪</div>
+                <div class="stat-value" id="totalSpent">₨0</div>
+                <div class="stat-label">Total Spent</div>
             </div>
-
-            <div class="payment-details">
-              <div class="detail-row">
-                <span class="label">Subtotal:</span>
-                <span class="value" id="paySubtotal">रू 0</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Tax (13%):</span>
-                <span class="value" id="payTax">रू 0</span>
-              </div>
-              <div class="detail-row">
-                <span class="label">Total:</span>
-                <span class="value" id="payTotal" style="font-weight:700;color:#ff7a18">रू 0</span>
-              </div>
-            </div>
-
-            <div class="payment-actions">
-              <button id="confirmPayBtn" class="confirm-pay">Confirm & Proceed</button>
-              <button id="cancelPayBtn" class="cancel-pay">Cancel</button>
-            </div>
-          </div>
         </div>
 
-        <!-- Delivery Details Modal -->
-        <div class="delivery-modal" id="deliveryModal">
-          <div class="delivery-panel">
-            <h2>Delivery Information</h2>
-            
-            <div class="form-group">
-              <label>Full Name *</label>
-              <input id="deliveryName" type="text" placeholder="Enter your full name" required />
-            </div>
-
-            <div class="form-group">
-              <label>Phone Number *</label>
-              <input id="deliveryPhone" type="tel" placeholder="98xxxxxxxx" required />
-            </div>
-
-            <div class="form-group">
-              <label>Email Address</label>
-              <input id="deliveryEmail" type="email" placeholder="your@email.com" />
-            </div>
-
-            <div class="form-group">
-              <label>District *</label>
-              <input id="deliveryDistrict" type="text" placeholder="e.g., Kathmandu, Pokhara" required />
-            </div>
-
-            <div class="form-group">
-              <label>City/Town *</label>
-              <input id="deliveryCity" type="text" placeholder="e.g., Kathmandu, Biratnagar" required />
-            </div>
-
-            <div class="form-group">
-              <label>Delivery Address *</label>
-              <textarea id="deliveryAddress" placeholder="Street address, house number, landmarks" required></textarea>
-            </div>
-
-            <div class="form-group">
-              <label>Postal Code</label>
-              <input id="deliveryPostal" type="text" placeholder="Postal code (optional)" />
-            </div>
-
-            <div class="delivery-actions">
-              <button id="submitOrderBtn" class="submit-order">Place Order</button>
-              <button id="cancelDeliveryBtn" class="cancel-pay">Cancel</button>
-            </div>
-          </div>
+        <div class="grid-2" style="margin-top: 30px; display: grid; grid-template-columns: repeat(4, 1fr);">
+            <a href="/Online-Shoes-Store/Front-End/checkout.html" class="btn btn-primary" style="padding: 15px; text-align: center; text-decoration: none; border-radius: 8px; background: #1a73e8; color: white; font-weight: 600; transition: all 0.3s;">
+                🛒 Go to Checkout
+            </a>
+            <a href="/Online-Shoes-Store/Front-End/customer-orders.html?filter=recent" class="btn btn-primary" style="padding: 15px; text-align: center; text-decoration: none; border-radius: 8px; background: #1a73e8; color: white; font-weight: 600; transition: all 0.3s;">
+                📋 Recent Orders
+            </a>
+            <a href="/Online-Shoes-Store/Front-End/customer-orders.html" class="btn btn-primary" style="padding: 15px; text-align: center; text-decoration: none; border-radius: 8px; background: #1a73e8; color: white; font-weight: 600; transition: all 0.3s;">
+                📦 View All Orders
+            </a>
+            <a href="/Online-Shoes-Store/Front-End/track-order.html" class="btn btn-primary" style="padding: 15px; text-align: center; text-decoration: none; border-radius: 8px; background: #10b981; color: white; font-weight: 600; transition: all 0.3s;">
+                🔍 Track Order
+            </a>
         </div>
 
-        <!-- Success Message -->
-        <div class="success-message" id="successMessage"></div>
-        
-        <section id="contact">
-            <div class="contact-section">
-                <h2>Contact US</h2>
-                <p>Email: P&Sonlineshoesstore123@gmail.com</p>
-                <p>+977 9765222094</p>
-                <p>Address: Panauti, Nepal</p>
+        <div style="margin-top: 40px; margin-bottom: 30px;">
+            <h2 class="section-title">Search Shoes</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="searchInput" placeholder="Search by brand or shoe name..." style="flex: 1; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; transition: border-color 0.3s;">
+                <button onclick="searchShoes()" style="padding: 12px 30px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s;">🔍 Search</button>
+                <button onclick="clearSearch()" style="padding: 12px 30px; background: #999; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.3s;">Clear</button>
             </div>
-        </section>
-        <footer id="about">
-            <div class="footer0"><h1>P&S Online Shoes Store</h1></div>
-            <div class="footer1">
-                Connect with us at
-                <div class="social-media">
-                    <a href="#"> <ion-icon name="logo-facebook"></ion-icon> </a>
-                    <a href="#"> <ion-icon name="logo-linkedin"></ion-icon> </a>
-                    <a href="#"> <ion-icon name="logo-youtube"></ion-icon> </a>
-                    <a href="#">
-                        <ion-icon name="logo-instagram"></ion-icon>
-                    </a>
-                    <a href="#"> <ion-icon name="logo-twitter"></ion-icon> </a>
-                </div>
-            </div>
-            <div class="footer2">
-                <div class="product">
-                    <div class="heading">Products</div>
-                    <div class="div">Sell your Products</div>
-                    <div class="div">Advertise</div>
-                    <div class="div">Pricing</div>
-                    <div class="div">Product Business</div>
-                </div>
-                <div class="services">
-                    <div class="heading">Services</div>
-                    <div class="div">Return</div>
-                    <div class="div">Cash Back</div>
-                    <div class="div">Affiliate Marketing</div>
-                    <div class="div">Others</div>
-                </div>
-                <div class="Company">
-                    <div class="heading">Company</div>
-                    <div class="div">Complaint</div>
-                    <div class="div">Careers</div>
-                    <div class="div">Affiliate Marketing</div>
-                    <div class="div">Support</div>
-                </div>
-                <div class="Get Help">
-                    <div class="heading">Get Help</div>
-                    <div class="div">Help Center</div>
-                    <div class="div">Privacy Policy</div>
-                    <div class="div">Terms</div>
-                    <div class="div">Login</div>
-                </div>
-            </div>
-            <div class="footer3">
-                Copyright ©
-                <h4>P&S Online Shoes Store</h4>
-                2024-2025
-            </div>
-        </footer>
-        <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
-        <script src="./Customer/script.js"></script>
-        <script src="./Customer/customer.js"></script>
+            <div id="searchResults" style="display: none; margin-bottom: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-weight: 600;"></div>
+        </div>
 
-        
-    </body>
+        <h2 class="section-title">Featured Products</h2>
+
+        <div id="productsContainer">
+            <div class="card" style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+                <p style="color: #666;">Loading products...</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">About P&S Online Shoes</h2>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3 style="font-size: 20px; color: #000; margin-bottom: 15px; font-weight: 700;">📍 Our Store</h3>
+                <p style="color: #666; line-height: 1.8; margin-bottom: 10px;"><strong>P&S Online Shoes</strong></p>
+                <p style="color: #666; line-height: 1.8; margin-bottom: 10px;">Premium Footwear Collection</p>
+                <p style="color: #666; line-height: 1.8; margin-bottom: 10px;">Panauti, Nepal</p>
+                <p style="color: #666; line-height: 1.8; margin-bottom: 10px;"><strong>Email:</strong> P&Sonlineshoe@gmail.com</p>
+                <p style="color: #666; line-height: 1.8; margin-bottom: 5px;"><strong>Phone:</strong></p>
+                <p style="color: #666; line-height: 1.8; margin-left: 20px; margin-bottom: 5px;">📱 9765222094</p>
+                <p style="color: #666; line-height: 1.8; margin-left: 20px;">📱 9843973197</p>
+            </div>
+            <div class="card">
+                <h3 style="font-size: 20px; color: #000; margin-bottom: 15px; font-weight: 700;">✨ Why Choose Us?</h3>
+                <ul style="color: #666; line-height: 2; list-style-position: inside;">
+                    <li>✓ 72+ Premium Shoe Brands</li>
+                    <li>✓ Authentic & Genuine Products</li>
+                    <li>✓ Fast & Reliable Delivery</li>
+                    <li>✓ Secure Payment Options</li>
+                    <li>✓ Customer Support 24/7</li>
+                    <li>✓ Easy Returns & Exchanges</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <h3 style="font-size: 20px; color: #000; margin-bottom: 15px; font-weight: 700;">🎯 Our Mission</h3>
+            <p style="color: #666; line-height: 1.8;">At P&S Online Shoes, we are committed to providing the finest selection of premium footwear from leading international brands. Our mission is to make quality shoes accessible and affordable for everyone while ensuring exceptional customer service and fast delivery across Nepal.</p>
+        </div>
+    </div>
+
+    <button class="cart-btn" onclick="toggleCart()">
+        🛒
+        <span class="cart-count" id="cartCount" style="display: none;">0</span>
+    </button>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: flex-end;">
+        <div style="background: white; width: 100%; max-width: 400px; height: 100vh; display: flex; flex-direction: column; box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);">
+            <!-- Cart Header -->
+            <div style="background: #000; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; font-size: 24px;">🛒 Cart</h2>
+                <button onclick="closeCart()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">✕</button>
+            </div>
+
+            <!-- Cart Items -->
+            <div id="cartItemsContainer" style="flex: 1; overflow-y: auto; padding: 20px;">
+                <!-- Items will be dynamically inserted here -->
+            </div>
+
+            <!-- Cart Footer with Total and Checkout -->
+            <div style="border-top: 1px solid #e0e0e0; padding: 20px; background: #f8f8f8;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 18px; font-weight: 700;">
+                    <span>Total:</span>
+                    <span id="cartTotal" style="color: #1a73e8;">₨0</span>
+                </div>
+                <button onclick="goToCheckout()" style="width: 100%; padding: 15px; background: #1a73e8; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 10px; transition: all 0.3s;">
+                    Proceed to Checkout
+                </button>
+                <button onclick="closeCart()" style="width: 100%; padding: 15px; background: white; color: #000; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s;">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Online-Shoes-Store/Front-End/api-client.js"></script>
+    <script>
+        // Get user info from session/local storage
+        function loadUserInfo() {
+            // Check if this is a preview/demo mode from owner
+            const urlParams = new URLSearchParams(window.location.search);
+            const isPreview = urlParams.get('preview') === 'true';
+            
+            // Priority: currentUser (customer) over owner
+            const user = JSON.parse(sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || '{}');
+            const owner = JSON.parse(localStorage.getItem('currentOwner') || 'null');
+            
+            // Allow owner to preview store in demo mode
+            if (isPreview && owner && owner.role === 'owner') {
+                document.getElementById('userName').textContent = 'Demo Customer';
+                document.getElementById('userInitial').textContent = 'D';
+                return;
+            }
+            
+            // Allow owner to view store as themselves (only if no customer logged in)
+            if (!user.id && owner && owner.role === 'owner' && !isPreview) {
+                document.getElementById('userName').textContent = owner.first_name || 'Store Owner';
+                document.getElementById('userInitial').textContent = (owner.first_name || 'O')[0].toUpperCase();
+                return;
+            }
+            
+            // Display customer info (has priority)
+            if (user.first_name) {
+                const fullName = (user.first_name || '') + ' ' + (user.last_name || '');
+                document.getElementById('userName').textContent = fullName.trim();
+                document.getElementById('userInitial').textContent = user.first_name[0].toUpperCase();
+            } else {
+                window.location.href = '/Online-Shoes-Store/index.html';
+            }
+        }
+
+        // Load products grouped by brand
+        async function loadProducts() {
+            try {
+                const result = await Products.getAll(100, 0);
+                if (result.success && result.data.products.length > 0) {
+                    // Group products by brand
+                    const groupedByBrand = {};
+                    result.data.products.forEach(product => {
+                        const brand = product.brand || 'Other';
+                        if (!groupedByBrand[brand]) {
+                            groupedByBrand[brand] = [];
+                        }
+                        groupedByBrand[brand].push(product);
+                    });
+
+                    const container = document.getElementById('productsContainer');
+                    let html = '';
+
+                    // Display each brand section
+                    Object.keys(groupedByBrand).sort().forEach(brand => {
+                        html += `<div class="brand-section">
+                            <h3 class="brand-title">${brand}</h3>
+                            <div class="products-grid">`;
+                        
+                        groupedByBrand[brand].forEach(product => {
+                            html += `
+                                <div class="product-card">
+                                    <div class="product-image" style="background-image: url('${product.image_url || '/Online-Shoes-Store/Front-End/Images/Nike%20Air%201.jpeg'}'); background-size: cover; background-position: center;"></div>
+                                    <div class="product-info">
+                                        <div class="product-name">${product.name}</div>
+                                        <div class="product-description">${product.description ? product.description.substring(0, 50) + '...' : 'Premium footwear'}</div>
+                                        <div class="product-price">₨${parseFloat(product.price).toLocaleString()}</div>
+                                        <div class="product-actions">
+                                            <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add to Cart</button>
+                                            <button class="btn btn-secondary" onclick="window.location.href='/Online-Shoes-Store/Front-End/product-reviews.html?productId=${product.id}'">📝 Review</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        html += `</div></div>`;
+                    });
+
+                    container.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Cart functions
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        function addToCart(id, name, price) {
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ id, name, price, quantity: 1, size: null });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showMessage('Added to cart!', 'success');
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            displayCart();
+            showMessage('Item removed from cart!', 'success');
+        }
+
+        function updateQuantity(id, newQuantity) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                if (newQuantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    item.quantity = newQuantity;
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    displayCart();
+                }
+            }
+        }
+
+        function updateSize(id, size) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.size = size || null;
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const countEl = document.getElementById('cartCount');
+            if (count > 0) {
+                countEl.textContent = count;
+                countEl.style.display = 'flex';
+            } else {
+                countEl.style.display = 'none';
+            }
+        }
+
+        function displayCart() {
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 40px 20px;"><p style="font-size: 18px; margin-bottom: 10px;">Your cart is empty</p><p style="font-size: 14px;">Add some shoes to get started!</p></div>';
+                document.getElementById('cartTotal').textContent = '₨0';
+                return;
+            }
+
+            let cartHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                cartHTML += `
+                    <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="margin: 0 0 5px 0; color: #000; font-weight: 700;">${item.name}</h4>
+                                <p style="margin: 0; color: #999; font-size: 12px;">₨${item.price.toLocaleString()} each</p>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" style="background: none; border: none; color: #ff4444; cursor: pointer; font-size: 18px; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">✕</button>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="font-size: 12px; color: #666; font-weight: 600; display: block; margin-bottom: 5px;">Size (UK):</label>
+                            <select id="size_${item.id}" onchange="updateSize(${item.id}, this.value)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; background: white;">
+                                <option value="">Select Size</option>
+                                <option value="5" ${item.size === '5' ? 'selected' : ''}>5</option>
+                                <option value="6" ${item.size === '6' ? 'selected' : ''}>6</option>
+                                <option value="7" ${item.size === '7' ? 'selected' : ''}>7</option>
+                                <option value="8" ${item.size === '8' ? 'selected' : ''}>8</option>
+                                <option value="9" ${item.size === '9' ? 'selected' : ''}>9</option>
+                                <option value="10" ${item.size === '10' ? 'selected' : ''}>10</option>
+                                <option value="11" ${item.size === '11' ? 'selected' : ''}>11</option>
+                                <option value="12" ${item.size === '12' ? 'selected' : ''}>12</option>
+                                <option value="13" ${item.size === '13' ? 'selected' : ''}>13</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" style="background: white; border: 1px solid #e0e0e0; width: 30px; height: 30px; cursor: pointer; border-radius: 4px; font-weight: 700; color: #000;">−</button>
+                                <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${item.id}, this.value)" style="width: 40px; padding: 5px; border: 1px solid #e0e0e0; border-radius: 4px; text-align: center;">
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})" style="background: white; border: 1px solid #e0e0e0; width: 30px; height: 30px; cursor: pointer; border-radius: 4px; font-weight: 700; color: #000;">+</button>
+                            </div>
+                            <div style="font-weight: 700; color: #1a73e8;">₨${itemTotal.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItemsContainer.innerHTML = cartHTML;
+            document.getElementById('cartTotal').textContent = '₨' + total.toLocaleString();
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'flex';
+                displayCart();
+            }
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function goToCheckout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            window.location.href = '/Online-Shoes-Store/Front-End/checkout.html';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUser');
+            window.location.href = '/Online-Shoes-Store/index.html';
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Search function
+        async function searchShoes() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                document.getElementById('searchResults').style.display = 'none';
+                loadProducts();
+                return;
+            }
+
+            try {
+                const result = await Products.getAll(100, 0);
+                const productsContainer = document.getElementById('productsContainer');
+                
+                if (!result.success || !result.data.products) {
+                    loadProducts();
+                    return;
+                }
+
+                // Filter products based on search term
+                const filteredProducts = result.data.products.filter(product => {
+                    const productName = (product.name || '').toLowerCase();
+                    const productBrand = (product.brand || '').toLowerCase();
+                    const productDescription = (product.description || '').toLowerCase();
+                    
+                    return productName.includes(searchTerm) || 
+                           productBrand.includes(searchTerm) || 
+                           productDescription.includes(searchTerm);
+                });
+
+                // Display search results message
+                if (filteredProducts.length === 0) {
+                    document.getElementById('searchResults').innerHTML = `❌ No shoes found matching "${searchTerm}". Showing all products.`;
+                    document.getElementById('searchResults').style.display = 'block';
+                    loadProducts();
+                    return;
+                }
+
+                document.getElementById('searchResults').innerHTML = `✅ Found ${filteredProducts.length} shoe(s) matching "${searchTerm}"`;
+                document.getElementById('searchResults').style.display = 'block';
+
+                // Display filtered products grouped by brand
+                const groupedByBrand = {};
+                filteredProducts.forEach(product => {
+                    const brand = product.brand || 'Other';
+                    if (!groupedByBrand[brand]) {
+                        groupedByBrand[brand] = [];
+                    }
+                    groupedByBrand[brand].push(product);
+                });
+
+                let html = '';
+                Object.keys(groupedByBrand).sort().forEach(brand => {
+                    html += `<div class="brand-section">
+                        <h3 class="brand-title">${brand}</h3>
+                        <div class="products-grid">`;
+                    
+                    groupedByBrand[brand].forEach(product => {
+                        html += `
+                            <div class="product-card">
+                                <div class="product-image" style="background-image: url('${product.image_url || '/Online-Shoes-Store/Front-End/Images/Nike%20Air%201.jpeg'}'); background-size: cover; background-position: center;"></div>
+                                <div class="product-info">
+                                    <div class="product-name">${product.name}</div>
+                                    <div class="product-description">${product.description ? product.description.substring(0, 50) + '...' : 'Premium footwear'}</div>
+                                    <div class="product-price">₨${parseFloat(product.price).toLocaleString()}</div>
+                                    <div class="product-actions">
+                                        <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add to Cart</button>
+                                        <button class="btn btn-secondary" onclick="window.location.href='/Online-Shoes-Store/Front-End/product-reviews.html?productId=${product.id}'">📝 Review</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `</div></div>`;
+                });
+
+                productsContainer.innerHTML = html;
+            } catch (error) {
+                console.error('Error searching products:', error);
+                loadProducts();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+            loadProducts();
+        }
+
+        // Allow Enter key to search
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        searchShoes();
+                    }
+                });
+            }
+        });
+
+        // Initialize
+        loadUserInfo();
+        loadProducts();
+        updateCartCount();
+    </script>
+</body>
 </html>

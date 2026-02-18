@@ -2,9 +2,8 @@ const qs = s => document.querySelector(s);
 const registerForm = qs('#registerForm');
 const regMsg = qs('#regMsg');
 
-const hash = s => btoa(s);
-const getUsers = () => JSON.parse(localStorage.getItem('users_customer') || '[]');
-const setUsers = u => localStorage.setItem('users_customer', JSON.stringify(u));
+// API Base URL - use absolute path from root
+const API_BASE_URL = '/Online-Shoes-Store/Backend/api';
 
 function validateEmail(e){
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
@@ -16,52 +15,84 @@ function show(text, ok = true){
   regMsg.className = 'message ' + (ok ? 'success' : 'error');
 }
 
-registerForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const name = qs('#name').value.trim();
-  const email = qs('#email').value.trim().toLowerCase();
-  const phone = qs('#phone').value.trim();
-  const password = qs('#password').value;
-  const confirm = qs('#confirmPassword').value;
+// Register handler with backend API
+if(registerForm){
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const nameInput = qs('#name');
+    const emailInput = qs('#email');
+    const phoneInput = qs('#phone');
+    const passwordInput = qs('#password');
+    const confirmInput = qs('#confirmPassword');
 
-  if(!name || !email || !password || !confirm){
-    show('Please fill all required fields', false);
-    return;
-  }
-  if(!validateEmail(email)){
-    show('Enter a valid email', false);
-    return;
-  }
-  if(password.length < 6){
-    show('Password must be at least 6 characters', false);
-    return;
-  }
-  if(password !== confirm){
-    show('Passwords do not match', false);
-    return;
-  }
+    const fullName = (nameInput?.value || '').trim();
+    const email = (emailInput?.value || '').trim();
+    const phone = (phoneInput?.value || '').trim();
+    const password = passwordInput?.value || '';
+    const confirmPassword = confirmInput?.value || '';
 
-  const users = getUsers();
-  if(users.find(u => u.email === email)){
-    show('An account with this email already exists', false);
-    return;
-  }
+    // Validation
+    if(!fullName || !email || !password || !confirmPassword){
+      show('Please fill all required fields', false);
+      return;
+    }
 
-  const user = {
-    id: Date.now(),
-    name,
-    email,
-    phone,
-    pwd: hash(password),
-    role: 'customer',
-    created: new Date().toISOString()
-  };
+    if(!validateEmail(email)){
+      show('Enter a valid email', false);
+      return;
+    }
 
-  users.push(user);
-  setUsers(users);
+    if(password.length < 8){
+      show('Password must be at least 8 characters', false);
+      return;
+    }
 
-  show('Account created. Redirecting to login...', true);
-  setTimeout(() => {
-    location.href = '../index.html';
-  }, 900);
-});
+    if(password !== confirmPassword){
+      show('Passwords do not match', false);
+      return;
+    }
+
+    try {
+      show('Creating account...', true);
+
+      // Split full name into first and last name
+      const nameParts = fullName.split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || 'User';
+
+      const response = await fetch(`${API_BASE_URL}/auth.php?request=register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+          phone: phone || '',
+          password: password,
+          password_confirm: confirmPassword,
+          role: 'customer'
+        })
+      });
+
+      const data = await response.json();
+
+      if(data.success){
+        show('Account created successfully! Redirecting to login...', true);
+        setTimeout(() => {
+          window.location.href = '../index.html';
+        }, 1500);
+      } else if(data.errors){
+        // Show validation errors
+        const errorMessages = Object.values(data.errors).join(', ');
+        show(errorMessages, false);
+      } else {
+        show(data.message || 'Registration failed', false);
+      }
+    } catch(error){
+      console.error('Registration error:', error);
+      show('Network error. Please try again: ' + error.message, false);
+    }
+  });
+}

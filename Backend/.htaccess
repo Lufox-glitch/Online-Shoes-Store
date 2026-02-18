@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Online-Shoes-Store/Backend/
+    
+    # Remove file/folder name if it exists
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Route API requests
+    RewriteRule ^api/auth/?$ api/auth.php [QSA,L]
+    RewriteRule ^api/products/?$ api/products.php [QSA,L]
+    RewriteRule ^api/orders/?$ api/orders.php [QSA,L]
+</IfModule>

@@ -1,47 +1,80 @@
-// Simple owner login
-
-const demo = { email: "prashantwaiba123@gmail.com", password: "prashant123" };
+// Owner login with backend API
 
 const $ = id => document.getElementById(id);
 const loginForm = $("loginForm");
 const emailIn = $("email");
 const pwdIn = $("password");
-const togglePwd = $("togglePwd");
-const msg = $("message");
+const msg = $("loginMsg");
 const remember = $("remember");
-const forgotLink = $("forgotLink");
+
+// API Base URL - use absolute path from root
+const API_BASE_URL = '/Online-Shoes-Store/Backend/api';
 
 function showMessage(text, type = "") {
   msg.textContent = text;
   msg.className = "message " + (type || "");
+  if (type) msg.style.display = 'block';
 }
 
-togglePwd.addEventListener("click", () => {
-  const t = pwdIn.type === "password" ? "text" : "password";
-  pwdIn.type = t;
-  togglePwd.textContent = t === "text" ? "Hide" : "Show";
-});
-
-loginForm.addEventListener("submit", (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   showMessage("", "");
+  
   const email = emailIn.value.trim();
   const pwd = pwdIn.value;
 
-  if (!email || !pwd) return showMessage("Please fill in all fields.", "error");
+  if (!email || !pwd) {
+    return showMessage("Please fill in all fields.", "error");
+  }
 
-  // fake auth
-  if (email.toLowerCase() === demo.email && pwd === demo.password) {
-    showMessage("Welcome back to P&S Online Shoes Store — redirecting to owner dashboard...", "success");
-    if (remember.checked) localStorage.setItem("owner_remember", email);
-    else localStorage.removeItem("owner_remember");
+  try {
+    showMessage("Logging in...", "");
 
-    // redirect to owner dashboard
-    setTimeout(() => {
-      window.location.href = "../Front-End/Owner/owner-dashboard.html";
-    }, 700);
-  } else {
-    showMessage("Invalid credentials.", "error");
+    const response = await fetch(`${API_BASE_URL}/auth.php?request=login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email,
+        password: pwd,
+        remember_me: remember.checked
+      })
+    });
+
+    const data = await response.json();
+
+    if(data.success && data.data.role === 'owner'){
+      // Store owner info
+      const ownerInfo = {
+        id: data.data.user_id,
+        email: data.data.email,
+        first_name: data.data.first_name,
+        role: data.data.role
+      };
+      
+      // Store in both locations for compatibility
+      localStorage.setItem('user', JSON.stringify(ownerInfo));
+      localStorage.setItem('currentOwner', JSON.stringify(ownerInfo));
+      
+      if(remember.checked){
+        localStorage.setItem('owner_remember', email);
+      } else {
+        localStorage.removeItem('owner_remember');
+      }
+
+      showMessage(`Welcome back! Redirecting to owner dashboard...`, "success");
+      
+      setTimeout(() => {
+        window.location.href = "/Online-Shoes-Store/Front-End/Owner/owner-dashboard.html";
+      }, 800);
+    } else if(data.success){
+      showMessage('You do not have owner privileges. Please contact support.', 'error');
+    } else {
+      showMessage(data.message || 'Invalid credentials.', 'error');
+    }
+  } catch(error){
+    console.error('Login error:', error);
+    showMessage('Network error. Please try again: ' + error.message, 'error');
   }
 });
 
@@ -54,9 +87,4 @@ window.addEventListener("load", () => {
   }
 });
 
-// Forgot link convenience
-forgotLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  alert("Demo credentials:\nprashantwaiba123@gmail.com\nprashant123");
-});
 

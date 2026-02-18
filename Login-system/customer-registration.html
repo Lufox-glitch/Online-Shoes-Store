@@ -4,20 +4,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Create Account - P&S Shoes</title>
-  <link rel="stylesheet" href="customer-registration.css" />
+  <link rel="stylesheet" href="customer-registration-modern.css" />
   <style>
-    .back-link{position:absolute;top:16px;right:16px;padding:8px 12px;border-radius:8px;background:#f3f4f6;color:#061022;text-decoration:none;font-weight:600}
-    .back-link:hover{background:#e5e7eb}
+    .back-link {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
   </style>
 </head>
 <body>
-  <a class="back-link" href="/index.html">Back to Login</a>
+  <a class="back-link" href="/Online-Shoes-Store/">← Back Home</a>
 
   <main class="auth-wrap" role="main">
     <div class="card">
       <section class="form-panel" aria-label="Customer registration panel">
         <header class="brand-row">
-          <h1 class="brand">Create Account</h1>
+          <h1 class="brand">👟 P&S Shoes</h1>
+          <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">Create your account</p>
         </header>
 
         <form id="registerForm" class="form" autocomplete="on" aria-label="Customer registration form">
@@ -38,24 +54,62 @@
 
           <div class="field password-field">
             <label for="password" class="label-text">Password</label>
-            <input id="password" name="password" type="password" required placeholder="Create a password" />
+            <div class="pwd-wrap">
+              <input id="password" name="password" type="password" required placeholder="Create a password" />
+              <button type="button" class="icon-btn" id="togglePassword" aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
           </div>
 
           <div class="field password-field">
             <label for="confirmPassword" class="label-text">Confirm password</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Repeat password" />
+            <div class="pwd-wrap">
+              <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Repeat password" />
+              <button type="button" class="icon-btn" id="toggleConfirmPassword" aria-label="Toggle confirm password visibility">
+                👁️
+              </button>
+            </div>
           </div>
 
           <button type="submit" class="btn primary">Create account</button>
 
           <div id="regMsg" class="message" role="status" aria-live="polite"></div>
 
-          <p class="muted">Already have an account? <a href="../index.html" class="link-btn">Sign in</a></p>
+          <p class="muted">Already have an account? <a href="/Online-Shoes-Store/Login-system/customer-login.html" class="link-btn">Sign in</a></p>
+          <p class="muted">Store owner? <a href="/Online-Shoes-Store/Login-system/owner-login.html" class="link-btn">Sign in here</a></p>
         </form>
       </section>
     </div>
   </main>
 
   <script src="customer-registration.js"></script>
+  <script>
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        this.textContent = isPassword ? '👁️‍🗨️' : '👁️';
+      });
+    }
+
+    if (toggleConfirmPassword && confirmPasswordInput) {
+      toggleConfirmPassword.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isPassword = confirmPasswordInput.type === 'password';
+        confirmPasswordInput.type = isPassword ? 'text' : 'password';
+        this.textContent = isPassword ? '👁️‍🗨️' : '👁️';
+      });
+    }
+  </script>
 </body>
 </html>

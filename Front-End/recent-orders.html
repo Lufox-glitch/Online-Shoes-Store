@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Orders - P&S Online Shoes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f8f8;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #000;
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #1a73e8;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #1557b0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: #000;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #000;
+        }
+
+        th {
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #999;
+        }
+
+        .status-completed {
+            background: #000;
+            color: white;
+        }
+
+        .status-shipped {
+            background: #e8e8e8;
+            color: #333;
+            border: 1px solid #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #1a73e8;
+            color: #1a73e8;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #1a73e8;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">👟 P&S Shoes</div>
+        </div>
+        <div class="header-right">
+            <button class="btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="/Online-Shoes-Store/Front-End/customer-dashboard.html" class="back-btn">← Back to Dashboard</a>
+        
+        <h1 class="page-title">Your Recent Orders</h1>
+
+        <div class="card">
+            <div id="loadingDiv" class="loading">
+                Loading your recent orders...
+            </div>
+            <div id="ordersDiv" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="noOrdersDiv" class="no-orders" style="display: none;">
+                You haven't placed any orders yet. Start shopping now!
+            </div>
+        </div>
+    </div>
+
+    <script src="/Online-Shoes-Store/Front-End/api-client.js"></script>
+    <script>
+        async function loadRecentOrders() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user') || 'null');
+                if (!user) {
+                    window.location.href = '/Online-Shoes-Store/index.html';
+                    return;
+                }
+
+                const result = await Orders.getMyOrders(10, 0);
+                
+                if (result.success && result.data.orders && result.data.orders.length > 0) {
+                    const tbody = document.getElementById('ordersBody');
+                    tbody.innerHTML = result.data.orders.map(order => `
+                        <tr>
+                            <td>#${order.id}</td>
+                            <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                            <td>₨${parseFloat(order.total_amount).toLocaleString()}</td>
+                            <td><span class="status-badge status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                        </tr>
+                    `).join('');
+                    
+                    document.getElementById('loadingDiv').style.display = 'none';
+                    document.getElementById('ordersDiv').style.display = 'block';
+                } else {
+                    document.getElementById('loadingDiv').style.display = 'none';
+                    document.getElementById('noOrdersDiv').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('loadingDiv').innerHTML = '<p style="color: #e74c3c;">Error loading orders. Please try again later.</p>';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            sessionStorage.removeItem('currentUser');
+            window.location.href = '/Online-Shoes-Store/index.html';
+        }
+
+        // Load orders on page load
+        loadRecentOrders();
+    </script>
+</body>
+</html>

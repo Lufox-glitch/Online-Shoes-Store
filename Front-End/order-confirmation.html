@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - P&S Online Shoes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            animation: bounce 0.6s ease-out;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .order-details {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-badge.status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-badge.status-processing {
+            background: #cfe2ff;
+            color: #084298;
+            border: 1px solid #b6d4fe;
+        }
+
+        .status-badge.status-shipped {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .status-badge.status-delivered {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-badge.status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .next-steps {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .next-steps h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-direction: column;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+
+        .tracking-section {
+            background: #ecfdf5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .tracking-section h3 {
+            color: #059669;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tracking-info {
+            color: #067857;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .tracking-status {
+            margin-top: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Order Confirmed!</h1>
+        <p class="subtitle">Thank you for your purchase</p>
+
+        <div class="order-details" id="orderDetails">
+            <div class="detail-row">
+                <span class="detail-label">Order ID</span>
+                <span class="detail-value" id="orderId">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span><span class="status-badge" id="orderStatus">Pending</span></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Total Amount</span>
+                <span class="detail-value" id="totalAmount">₨0</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Method</span>
+                <span class="detail-value" id="paymentMethod">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Estimated Delivery</span>
+                <span class="detail-value" id="deliveryDate">-</span>
+            </div>
+        </div>
+
+        <div class="tracking-section">
+            <h3>📍 Delivery Tracking</h3>
+            <div class="tracking-info" id="trackingInfo">
+                Your order is being processed. You'll receive a tracking number once it's shipped.
+            </div>
+            <div class="tracking-status" id="trackingStatus">
+                Status: Pending
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3>What's Next?</h3>
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-text">We'll verify your payment and order details</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-text">Your order will be prepared for shipment</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-text">You'll receive tracking information via email</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-text">Your shoes will arrive at your doorstep</div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="goToDashboard()">Back to Dashboard</button>
+            <button class="btn btn-secondary" onclick="viewOrders()">View My Orders</button>
+        </div>
+    </div>
+
+    <script>
+        // Get order ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+
+        async function loadOrderDetails() {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/orders.php?request=detail/${orderId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const order = data.data;
+                    document.getElementById('orderId').textContent = '#' + order.id;
+                    document.getElementById('totalAmount').textContent = '₨' + parseFloat(order.total_amount).toLocaleString();
+                    const statusElement = document.getElementById('orderStatus');
+                    statusElement.textContent = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+                    statusElement.className = 'status-badge status-' + order.status;
+
+                    // Load delivery info
+                    loadDeliveryInfo(orderId);
+                    
+                    // Load payment info
+                    loadPaymentInfo(orderId);
+                }
+            } catch (error) {
+                console.error('Error loading order:', error);
+            }
+        }
+
+        async function loadDeliveryInfo(orderId) {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/delivery.php?request=get-order-delivery/${orderId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                if (data.success && data.data) {
+                    const delivery = data.data;
+                    document.getElementById('deliveryDate').textContent = formatDate(delivery.estimated_delivery_date);
+                    document.getElementById('trackingStatus').textContent = 'Status: ' + (delivery.delivery_status || 'Pending');
+                }
+            } catch (error) {
+                console.error('Error loading delivery:', error);
+            }
+        }
+
+        async function loadPaymentInfo(orderId) {
+            try {
+                const response = await fetch(`/Online-Shoes-Store/Backend/api/payments.php?request=get-order-payment/${orderId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                if (data.success && data.data) {
+                    const payment = data.data;
+                    const methodName = payment.payment_method.charAt(0).toUpperCase() + payment.payment_method.slice(1).replace('-', ' ');
+                    document.getElementById('paymentMethod').textContent = methodName;
+                }
+            } catch (error) {
+                console.error('Error loading payment:', error);
+            }
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function goToDashboard() {
+            window.location.href = '/Online-Shoes-Store/Front-End/customer-dashboard.html';
+        }
+
+        function viewOrders() {
+            window.location.href = '/Online-Shoes-Store/Front-End/customer-orders.html';
+        }
+
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            if (orderId) {
+                loadOrderDetails();
+            } else {
+                document.getElementById('orderId').textContent = 'Unknown';
+            }
+
+            // Show stored order info if available
+            const lastOrder = JSON.parse(localStorage.getItem('lastOrder') || '{}');
+            if (lastOrder.total) {
+                document.getElementById('totalAmount').textContent = '₨' + lastOrder.total.toLocaleString();
+            }
+            if (lastOrder.deliveryDate) {
+                document.getElementById('deliveryDate').textContent = formatDate(lastOrder.deliveryDate);
+            }
+            if (lastOrder.paymentMethod) {
+                const methodName = lastOrder.paymentMethod.charAt(0).toUpperCase() + lastOrder.paymentMethod.slice(1).replace('-', ' ');
+                document.getElementById('paymentMethod').textContent = methodName;
+            }
+        });
+    </script>
+</body>
+</html>

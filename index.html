@@ -3,71 +3,356 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Customer Login - P&S Shoes</title>
+  <title>P&S Online Shoes - Premium Footwear</title>
   <link rel="stylesheet" href="Login-system/customer-login.css" />
   <style>
-    .owner-login-btn{position:absolute;top:16px;right:16px;padding:10px 16px;background:#ff7a18;color:#fff;border:none;border-radius:8px;text-decoration:none;font-weight:600;cursor:pointer;font-size:14px;transition:background 0.2s}
-    .owner-login-btn:hover{background:#ff6600}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: rgba(15, 20, 25, 0.95);
+      padding: 20px 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      border-bottom: 2px solid #ff9800;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav-btn.login {
+      background: #ff9800;
+      color: white;
+    }
+
+    .nav-btn.login:hover {
+      background: #ffb74d;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 152, 0, 0.5);
+    }
+
+    .nav-btn.signup {
+      background: transparent;
+      color: #ff9800;
+      border: 2px solid #ff9800;
+    }
+
+    .nav-btn.signup:hover {
+      background: #ff9800;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .nav-btn.owner {
+      background: #00bcd4;
+      color: white;
+      font-size: 13px;
+    }
+
+    .nav-btn.owner:hover {
+      background: #26c6da;
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 40px 20px 100px 20px;
+      text-align: center;
+      color: #fff;
+      min-height: 500px;
+      background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+    }
+
+    .hero-content {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      opacity: 0.95;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      padding: 15px 40px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .hero-btn.primary {
+      background: white;
+      color: #0f1419;
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-btn.primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+      background: #f0f0f0;
+    }
+
+    .hero-btn.secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid #ff9800;
+    }
+
+    .hero-btn.secondary:hover {
+      background: #ff9800;
+      color: white;
+      border-color: #ff9800;
+      transform: translateY(-4px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      background: #111;
+      box-shadow: inset 0 4px 20px rgba(255, 152, 0, 0.05);
+    }
+
+    .feature-card {
+      padding: 25px;
+      text-align: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1f2e 0%, #232d3f 100%);
+      border: 1px solid #ff9800;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(255, 152, 0, 0.3);
+      background: linear-gradient(135deg, #232d3f 0%, #2a3548 100%);
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #ff9800;
+    }
+
+    .feature-card p {
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    footer {
+      background: #0f1419;
+      border-top: 2px solid #ff9800;
+      color: white;
+      text-align: center;
+      padding: 30px 40px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        padding: 15px 20px;
+      }
+
+      .hero {
+        min-height: 400px;
+        padding: 30px 20px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+      }
+
+      .hero p {
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 12px 15px;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
+      .nav-buttons {
+        gap: 10px;
+      }
+
+      .nav-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+
+      .hero {
+        min-height: 350px;
+        padding: 20px 15px;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+
+      .hero p {
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .hero-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+      }
+
+      .features {
+        padding: 15px;
+        gap: 15px;
+      }
+
+      .feature-card {
+        padding: 20px;
+      }
+
+      .feature-icon {
+        font-size: 40px;
+      }
+    }
   </style>
 </head>
 <body>
-  <a href="Login-system/owner-login.html" class="owner-login-btn">Owner Login</a>
+  <header>
+    <a href="/" class="logo">P&S Shoes</a>
+    <nav class="nav-buttons">
+      <a href="Login-system/customer-login.html" class="nav-btn login">Customer Login</a>
+      <a href="Login-system/customer-registration.html" class="nav-btn signup">Sign Up</a>
+      <a href="Login-system/owner-login.html" class="nav-btn owner">Owner Login</a>
+    </nav>
+  </header>
 
-  <main class="auth-wrap" role="main">
-    <div class="card">
-      <aside class="promo" aria-hidden="true">
-        <div class="promo-inner">
-          <svg class="shoe" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6ec1ff"/><stop offset="1" stop-color="#4a7cff"/></linearGradient></defs>
-            <rect rx="16" width="200" height="120" fill="url(#g)"/>
-            <g transform="translate(12,22)" fill="#fff" opacity="0.95">
-              <path d="M8 56c28-18 84-14 104-4 16 8 22 18 32 18 0 0-4 16-18 16-18 0-30-6-38-6-10 0-72-6-82-40z"/>
-              <circle cx="140" cy="64" r="6" fill="#ffe"/>
-            </g>
-          </svg>
-          <h3>Welcome back</h3>
-          <p>Sign in to shop the latest shoes and manage orders.</p>
-        </div>
-      </aside>
-
-      <section class="form-panel" aria-label="Customer login panel">
-        <header class="brand-row">
-          <h1 class="brand">P&S Online Shoes</h1>
-        </header>
-
-        <form id="loginForm" class="form" autocomplete="on">
-          <div class="field">
-            <label for="email" class="label-text">Email</label>
-            <input id="email" type="email" required placeholder="Enter your email" />
-          </div>
-
-          <div class="field password-field">
-            <label for="password" class="label-text">Password</label>
-            <div class="pwd-wrap">
-              <input id="password" type="password" required placeholder="••••••••" />
-              <button id="togglePwd" class="icon-btn" type="button" aria-label="Show password">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="row between">
-            <label class="remember">
-              <input id="remember" type="checkbox" /> Remember me
-            </label>
-            <a class="forgot" href="#">Forgot?</a>
-          </div>
-
-          <button type="submit" class="btn primary">Sign in</button>
-
-          <p class="muted">No account? <a href="Login-system/customer-registration.html" class="link-btn">Create an account</a></p>
-
-          <div id="msg" class="message" role="status" aria-live="polite"></div>
-        </form>
-      </section>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>🏃 Step Into Style</h1>
+      <p>Discover premium footwear designed for comfort and fashion. From casual sneakers to professional shoes, find your perfect pair today.</p>
+      <div class="hero-buttons">
+        <a href="Login-system/customer-registration.html" class="hero-btn primary">Get Started</a>
+        <a href="Login-system/customer-login.html" class="hero-btn secondary">Sign In</a>
+      </div>
     </div>
-  </main>
+  </section>
 
-  <script src="Login-system/customer-login.js"></script>
+  <section class="features">
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h3>Premium Quality</h3>
+      <p>Handpicked collection of high-quality shoes from top brands</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚚</div>
+      <h3>Fast Shipping</h3>
+      <p>Quick and reliable delivery to your doorstep</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Best Prices</h3>
+      <p>Competitive pricing with regular discounts and offers</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Secure Payment</h3>
+      <p>Safe and encrypted payment processing</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 P&S Online Shoes. All rights reserved. | Premium Footwear Store</p>
+  </footer>
 </body>
 </html>
